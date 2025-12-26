@@ -83,8 +83,8 @@ class WormGearCalculator : ViewModel() {
     /**
      * Profilverschiebung
      */
-    fun getX_m(x_f: Double, m_n: Double): Double {
-        return x_f * m_n
+    fun getX_m(x_f: Double, m_n: Double, gamma_rad: Double): Double {
+        return x_f * getM_x(m_n,gamma_rad)
     }
 
     /**
@@ -220,7 +220,7 @@ class WormGearCalculator : ViewModel() {
         val m_x = getM_x(m_n, gamma_rad)
         val d_2 = getD_2(m_n, z2)
         val x_f = getX_f(a, d_m1, m_n, gamma_rad, z2)
-        val x_m = getX_m(x_f, m_n)
+        val x_m = getX_m(x_f, m_n, gamma_rad)
         val p_n = getP_n(m_n)
         val p_x = getP_x(m_x)
         val p_z = getP_z(p_x, z1)
