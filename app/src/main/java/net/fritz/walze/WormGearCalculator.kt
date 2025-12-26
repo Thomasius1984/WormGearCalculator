@@ -67,8 +67,8 @@ class WormGearCalculator : ViewModel() {
     /**
      * Teilkreisdurchmesser Schneckenrad
      */
-    fun getD_2(m_n: Double, z2: Double): Double {
-        return m_n * z2
+    fun getD_2(m_n: Double,gamma_rad: Double, z2: Double): Double {
+        return getM_x(m_n, gamma_rad) * z2
     }
 
     /**
@@ -218,7 +218,7 @@ class WormGearCalculator : ViewModel() {
 
         val gamma_rad = getGamma_rad(gamma_degrees)
         val m_x = getM_x(m_n, gamma_rad)
-        val d_2 = getD_2(m_n, z2)
+        val d_2 = getD_2(m_n, gamma_rad, z2)
         val x_f = getX_f(a, d_m1, m_n, gamma_rad, z2)
         val x_m = getX_m(x_f, m_n, gamma_rad)
         val p_n = getP_n(m_n)
