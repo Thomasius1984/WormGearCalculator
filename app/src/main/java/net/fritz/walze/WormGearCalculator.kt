@@ -73,9 +73,11 @@ class WormGearCalculator : ViewModel() {
 
     /**
      * Profilverschiebungsfaktor
+     * (2a-d_m1-Axialmodul*Z)/(2Axialmodul)
      */
-    fun getX_f(a: Double, m_n: Double, z1: Double, z2: Double): Double {
-        return (a - (m_n * (z1 + z2) / 2.0)) / m_n
+    fun getX_f(a: Double, d_m1: Double, m_n: Double, gamma_rad: Double, z2: Double): Double {
+        //return (a - (m_n * (z1 + z2) / 2.0)) / m_n
+        return (2 * a - d_m1 - getM_x(m_n, gamma_rad) * z2)/(2 * getM_x(m_n, gamma_rad))
     }
 
     /**
@@ -217,7 +219,7 @@ class WormGearCalculator : ViewModel() {
         val gamma_rad = getGamma_rad(gamma_degrees)
         val m_x = getM_x(m_n, gamma_rad)
         val d_2 = getD_2(m_n, z2)
-        val x_f = getX_f(a, m_n, z1, z2)
+        val x_f = getX_f(a, d_m1, m_n, gamma_rad, z2)
         val x_m = getX_m(x_f, m_n)
         val p_n = getP_n(m_n)
         val p_x = getP_x(m_x)
@@ -237,10 +239,10 @@ class WormGearCalculator : ViewModel() {
         val epsilon_alpha = getEpsilon_alpha(da_2, d_2, alf_nz, p_et)
 
         return listOf(
-            ResultItem("Axialmodul m_x", String.format("%.3f", m_x), "mm"),
+            ResultItem("Axialmodul m_x", String.format("%.4f", m_x), "mm"),
             ResultItem("Teilkreisdurchmesser Rad d_2", String.format("%.2f", d_2), "mm"),
-            ResultItem("Profilverschiebungsfaktor x_f", String.format("%.3f", x_f), ""),
-            ResultItem("Profilverschiebung x_m", String.format("%.3f", x_m), "mm"),
+            ResultItem("Profilverschiebungsfaktor x_f", String.format("%.4f", x_f), ""),
+            ResultItem("Profilverschiebung x_m", String.format("%.4f", x_m), "mm"),
             ResultItem("Mittensteigungswinkel γ", String.format("%.4f", gamma_rad), "rad"),
             ResultItem("Mittensteigungswinkel γ", String.format("%.2f", gamma_degrees), "°"),
             ResultItem("Normale Teilung p_n", String.format("%.3f", p_n), "mm"),
