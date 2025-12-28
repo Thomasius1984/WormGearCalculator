@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import net.fritz.walze.ResultItem
 import net.fritz.walze.WormGearCalculator
 
 @Composable
@@ -22,27 +23,38 @@ fun ResultsScreen(
     val z2 by calculator.z2.collectAsState()
     val a by calculator.a.collectAsState()
     val d_m1 by calculator.d_m1.collectAsState()
-    val alf_nz by calculator.alf_nz.collectAsState()
     val hFf1f by calculator.hFf1f.collectAsState()
     val hFf2f by calculator.hFf2f.collectAsState()
     val cf1f by calculator.cf1f.collectAsState()
     val cf2f by calculator.cf2f.collectAsState()
-    val d_a2f by calculator.d_a2f.collectAsState()
 
-    val results = remember(
-        m_n, gamma_degrees, z1, z2, a, d_m1, alf_nz,
-        hFf1f, hFf2f, cf1f, cf2f, d_a2f
-    ) {
+    val results = remember(m_n, gamma_degrees, z1, z2, a, d_m1,
+        hFf1f, hFf2f, cf1f, cf2f) {
         calculator.calculateResults(
             m_n = m_n,
-            gamma_degrees = gamma_degrees,
             z1 = z1,
             z2 = z2,
             a = a,
             d_m1 = d_m1,
-            alf_nz = alf_nz
+            hFf1f = hFf1f,
+            hFf2f = hFf2f,
+            cf1f = cf1f,
+            cf2f = cf2f,
+            gammaDeg = gamma_degrees
         )
     }
+    // val results = remember(m_n, gamma_degrees, z1, z2, a, d_m1, alf_nz,
+    //     hFf1f, hFf2f, cf1f, cf2f, d_a2f) {
+    //     calculator.calculateResults(
+    //         m_n = m_n,
+    //         gamma_degrees = gamma_degrees,
+    //         z1 = z1,
+    //         z2 = z2,
+    //         a = a,
+    //         d_m1 = d_m1,
+    //         alf_nz = alf_nz
+    //     )
+    // }
 
     Column(modifier = modifier.fillMaxSize()) {
         Text(
@@ -69,7 +81,7 @@ fun ResultsScreen(
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(results) { result ->
                     ResultItemRow(result)
-                    Divider(
+                    HorizontalDivider(
                         modifier = Modifier.padding(horizontal = 16.dp),
                         color = MaterialTheme.colorScheme.surfaceVariant
                     )

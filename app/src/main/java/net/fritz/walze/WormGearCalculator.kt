@@ -5,6 +5,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.math.*
 
+// =============================
+// Constants
+// =============================
+const val NUMBER_PRECISION = 4
+
 class WormGearCalculator : ViewModel() {
 
     // =============================
@@ -49,6 +54,7 @@ class WormGearCalculator : ViewModel() {
     private val _d_a2f = MutableStateFlow(0.0)   // Kopfkreisdurchmesser Rad (Eingabe)
     val d_a2f: StateFlow<Double> = _d_a2f
 
+
     // =============================
     // Setter
     // =============================
@@ -60,7 +66,6 @@ class WormGearCalculator : ViewModel() {
     fun setA(v: Double) = _a.tryEmit(v)
     fun setD_m1(v: Double) = _d_m1.tryEmit(v)
     fun setAlf_nz(v: Double) = _alf_nz.tryEmit(v)
-
     fun setHFf1f(v: Double) = _hFf1f.tryEmit(v)
     fun setHFf2f(v: Double) = _hFf2f.tryEmit(v)
     fun setCf1f(v: Double) = _cf1f.tryEmit(v)
@@ -71,46 +76,114 @@ class WormGearCalculator : ViewModel() {
     // Grundfunktionen
     // =============================
 
-    fun gammaRad(gammaDeg: Double) = gammaDeg * PI / 180.0
-    fun m_x(m_n: Double, gammaRad: Double) = m_n / cos(gammaRad)
-    fun d_2(m_x: Double, z2: Double) = m_x * z2
+    fun getGammaRad(gammaDeg: Double): Double {
+        return gammaDeg * PI / 180.0
+    }
 
-    fun x_f(a: Double, d_m1: Double, m_x: Double, z2: Double) =
-        (2 * a - d_m1 - m_x * z2) / (2 * m_x)
+    fun getM_x(m_n: Double, gammaRad: Double): Double {
+        return m_n / cos(gammaRad)
+    }
 
-    fun x_m(x_f: Double, m_x: Double) = x_f * m_x
+    fun getD_2(m_x: Double, z2: Double): Double {
+        return m_x * z2
+    }
+
+    fun getX_f(a: Double, d_m1: Double, m_x: Double, z2: Double): Double {
+        return (2 * a - d_m1 - m_x * z2) / (2 * m_x)
+    }
+
+    fun getX_m(x_f: Double, m_x: Double): Double {
+        return x_f * m_x
+    }
 
     // =============================
     // Rad
     // =============================
 
-    fun hfm_2(hFf2f: Double, cf2f: Double, m_n: Double, x_m: Double) =
-        (hFf2f + cf2f) * m_n - x_m
+    fun getHfm_2(hFf2f: Double, cf2f: Double, m_n: Double, x_m: Double): Double {
+        return (hFf2f + cf2f) * m_n - x_m
+    }
 
-    fun df_2(d_2: Double, hfm_2: Double) =
-        d_2 - 2.0 * hfm_2
+    fun getDf_2(d_2: Double, hfm_2: Double): Double {
+        return d_2 - 2.0 * hfm_2
+    }
 
-    fun ha_2(hFf2f: Double, m_n: Double, x_m: Double) =
-        hFf2f * m_n + x_m
+    fun getHa_2(hFf2f: Double, m_n: Double, x_m: Double): Double {
+        return hFf2f * m_n + x_m
+    }
 
     // =============================
     // Schnecke
     // =============================
 
-    fun da_1(d_m1: Double, hFf1f: Double, m_n: Double) =
-        d_m1 + 2.0 * hFf1f * m_n
+    fun getDa_1(d_m1: Double, hFf1f: Double, m_n: Double): Double {
+        return d_m1 + 2.0 * hFf1f * m_n
+    }
 
-    fun df_1(d_m1: Double, hFf1f: Double, cf1f: Double, m_n: Double) =
-        d_m1 - 2.0 * (hFf1f + cf1f) * m_n
+    fun getDf_1(d_m1: Double, hFf1f: Double, cf1f: Double, m_n: Double): Double {
+        return d_m1 - 2.0 * (hFf1f + cf1f) * m_n
+    }
 
     // =============================
-    // Validierung
+    // Validierung (wahrscheinlich müssen noch andere variablen auf 0 überprüft werden
     // =============================
 
-    fun isValid(): Boolean =
-        m_n.value > 0 &&
-                z1.value > 0 &&
-                z2.value > 0 &&
-                a.value > 0 &&
-                d_m1.value > 0
+    private fun isValid(m_n: Double, z1: Double, z2: Double, a: Double, d_m1: Double): Boolean {
+        return m_n > 0 &&
+                z1 > 0 &&
+                z2 > 0 &&
+                a > 0 &&
+                d_m1 > 0
+    }
+
+    /**
+     * Calculate all results based on current input values
+     */
+
+    fun calculateResults(
+        m_n: Double,
+        z1: Double,
+        z2: Double,
+        a: Double,
+        d_m1: Double,
+        cf1f: Double,
+        cf2f: Double,
+        hFf1f: Double,
+        hFf2f: Double,
+        gammaDeg: Double
+    ): List<ResultItem> {
+        // Überprüfe Input Variable auf 0, wenn 0 dann keine Berechnungen
+        if (!isValid(m_n, z1, z2, a, d_m1)) {
+            return emptyList()
+        }
+        // Rufe alle get Funktionen zum berechnen auf und speichere Wert in eigener Variable
+        // Berechne Grundfunktionen
+        val resultGammaRad = getGammaRad(gammaDeg)
+        val resultM_x = getM_x(m_n, resultGammaRad)
+        val resultD_2 = getD_2(resultM_x,z2)
+        val resultX_f = getX_f(a, d_m1, resultM_x, z2)
+        val resultX_m = getX_m(resultX_f,resultM_x)
+        // Berechne Rad
+        val resultHfm_2 = getHfm_2(hFf2f, cf2f, m_n, resultX_m)
+        val resultDf_2 = getDf_2(resultD_2, resultHfm_2)
+        val resultHa_2 = getHa_2(hFf2f, m_n, resultX_m)
+        // Berechnung Schnecke
+        val resultDa_1 = getDa_1(d_m1, hFf1f, m_n)
+        val resultDf_1 = getDf_1(d_m1, hFf1f, cf1f, m_n)
+        return listOf(ResultItem("Axialmodul m_x",String.format("%.${NUMBER_PRECISION}f", resultM_x), "mm"),
+            ResultItem("D_2", String.format("%.${NUMBER_PRECISION}f", resultD_2), "mm"),
+            ResultItem("X_f",String.format("%.${NUMBER_PRECISION}f", resultX_f),""),
+            ResultItem("X_m",String.format("%.${NUMBER_PRECISION}f", resultX_m), "mm"),
+            ResultItem("Hfm_2", String.format("%.${NUMBER_PRECISION}f", resultHfm_2),"mm"),
+            ResultItem("Df_2", String.format("%.${NUMBER_PRECISION}f", resultDf_2),"mm"),
+            ResultItem("Ha_2", String.format("%.${NUMBER_PRECISION}f", resultHa_2),"mm"),
+            ResultItem("Da_1",String.format("%.${NUMBER_PRECISION}f", resultDa_1),"mm"),
+            ResultItem("Df_1", String.format("%.${NUMBER_PRECISION}f", resultDf_1), "mm")
+        )
+    }
+
 }
+
+
+
+data class ResultItem(val name: String, val value: String, val unit: String)
