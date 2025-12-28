@@ -9,7 +9,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import net.fritz.walze.ResultItem
 import net.fritz.walze.WormGearCalculator
 
 @Composable
@@ -24,11 +23,25 @@ fun ResultsScreen(
     val a by calculator.a.collectAsState()
     val d_m1 by calculator.d_m1.collectAsState()
     val alf_nz by calculator.alf_nz.collectAsState()
-    val ha_sternP by calculator.ha_sternP.collectAsState()
-    val c_sternP by calculator.c_sternP.collectAsState()
+    val hFf1f by calculator.hFf1f.collectAsState()
+    val hFf2f by calculator.hFf2f.collectAsState()
+    val cf1f by calculator.cf1f.collectAsState()
+    val cf2f by calculator.cf2f.collectAsState()
+    val d_a2f by calculator.d_a2f.collectAsState()
 
-    val results = remember(m_n, gamma_degrees, z1, z2, a, d_m1, alf_nz, ha_sternP, c_sternP) {
-        calculator.calculateResults(m_n, gamma_degrees, z1, z2, a, d_m1, alf_nz, ha_sternP, c_sternP)
+    val results = remember(
+        m_n, gamma_degrees, z1, z2, a, d_m1, alf_nz,
+        hFf1f, hFf2f, cf1f, cf2f, d_a2f
+    ) {
+        calculator.calculateResults(
+            m_n = m_n,
+            gamma_degrees = gamma_degrees,
+            z1 = z1,
+            z2 = z2,
+            a = a,
+            d_m1 = d_m1,
+            alf_nz = alf_nz
+        )
     }
 
     Column(modifier = modifier.fillMaxSize()) {
@@ -74,22 +87,20 @@ fun ResultItemRow(result: ResultItem) {
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = result.name,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
+        Text(
+            text = result.name,
+            modifier = Modifier.weight(1f),
+            style = MaterialTheme.typography.bodyMedium
+        )
+
         Spacer(modifier = Modifier.width(8.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.wrapContentWidth()
-        ) {
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = result.value,
                 style = MaterialTheme.typography.bodyMedium,
                 fontFamily = FontFamily.Monospace,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.error   // 🔴 Ergebnisse rot
             )
             if (result.unit.isNotEmpty()) {
                 Spacer(modifier = Modifier.width(4.dp))

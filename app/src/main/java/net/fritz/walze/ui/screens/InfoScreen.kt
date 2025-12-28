@@ -78,7 +78,7 @@ fun InfoScreen(modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.Start
         ) {
             Text(
-                text = "© 2025 Andreas Fritz (mit minimaler Beteiligung von Thomas Fritz)",
+                text = "© 2025 Thomas Fritz vom SuperSchleiferFreundeClub",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
