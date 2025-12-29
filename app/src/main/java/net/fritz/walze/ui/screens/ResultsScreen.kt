@@ -27,9 +27,11 @@ fun ResultsScreen(
     val hFf2f by calculator.hFf2f.collectAsState()
     val cf1f by calculator.cf1f.collectAsState()
     val cf2f by calculator.cf2f.collectAsState()
+    val d_a2f by calculator.d_a2f.collectAsState()
+
 
     val results = remember(m_n, gamma_degrees, z1, z2, a, d_m1,
-        hFf1f, hFf2f, cf1f, cf2f) {
+        hFf1f, hFf2f, cf1f, cf2f, d_a2f) {
         calculator.calculateResults(
             m_n = m_n,
             z1 = z1,
@@ -40,8 +42,8 @@ fun ResultsScreen(
             hFf2f = hFf2f,
             cf1f = cf1f,
             cf2f = cf2f,
-            gammaDeg = gamma_degrees
-        )
+            gammaDeg = gamma_degrees,
+            d_a2f = d_a2f)
     }
     // val results = remember(m_n, gamma_degrees, z1, z2, a, d_m1, alf_nz,
     //     hFf1f, hFf2f, cf1f, cf2f, d_a2f) {

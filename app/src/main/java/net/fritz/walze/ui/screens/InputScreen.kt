@@ -77,14 +77,14 @@ fun InputScreen(
         )
 
         GreenInputField(
-            "cf1f Fuß-Freiheitsfaktor Schnecke (INKOMA)",
+            "cf1f Fuß-Freiheitsfaktor Schnecke",
             cf1f,
             calculator::setCf1f,
             ""
         )
 
         GreenInputField(
-            "cf2f Fuß-Freiheitsfaktor Rad (INKOMA)",
+            "cf2f Fuß-Freiheitsfaktor Rad",
             cf2f,
             calculator::setCf2f,
             ""

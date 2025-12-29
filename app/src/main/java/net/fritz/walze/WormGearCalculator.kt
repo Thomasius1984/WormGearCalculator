@@ -89,15 +89,11 @@ class WormGearCalculator : ViewModel() {
 
     }
 
-
-
     fun getx_f(a: Double, d_m1: Double, m_x: Double, z2: Double): Double {
         return (2 * a - d_m1 - m_x * z2) / (2 * m_x)
     }
 
-    fun getx_m(x_f: Double, m_x: Double): Double {
-        return x_f * m_x
-    }
+
 
     fun getp_n(m_n: Double): Double {
         return m_n * PI
@@ -116,11 +112,55 @@ class WormGearCalculator : ViewModel() {
     }
 
     // =============================
+    // Schnecke
+    // =============================
+
+    fun getham_1f(gammaDeg: Double): Double {
+        return  cos(gammaDeg*PI/180)
+    }
+
+    fun getham_1(ham_1f:Double, m_x:Double): Double {
+        return ham_1f * m_x
+    }
+
+    fun getda_1(d_m1: Double, hFf1f: Double, m_n: Double): Double {
+        return d_m1 + 2.0 * hFf1f * m_n
+    }
+
+    fun getra_1(da_1: Double): Double {
+        return da_1 / 2.0
+    }
+
+    fun gethfm_1(m_X: Double, hFf1f: Double, cf1f: Double): Double {
+        return (hFf1f + cf1f) * m_X
+    }
+
+    fun getdf_1(d_m1: Double, hfm_1: Double): Double {
+        return d_m1 - 2.0 * hfm_1
+    }
+
+    fun getrf_1(df_1: Double): Double {
+        return df_1 / 2.0
+    }
+
+    fun geth_1(hfm_1: Double, ham_1: Double): Double {
+        return hfm_1 + ham_1
+    }
+
+    // =============================
     // Rad
     // =============================
 
     fun getd_2(m_x: Double, z2: Double): Double {
         return m_x * z2
+    }
+
+    fun getx_m(x_f: Double, m_x: Double): Double {
+        return x_f * m_x
+    }
+
+    fun getdm_2(d_2: Double, x_m: Double): Double {
+        return d_2 + (2.0 * x_m)
     }
 
     fun gethfm_2(hFf2f: Double, cf2f: Double, m_n: Double, x_m: Double): Double {
@@ -135,32 +175,23 @@ class WormGearCalculator : ViewModel() {
         return hFf2f * m_n + x_m
     }
 
-    // =============================
-    // Schnecke
-    // =============================
 
-    fun getham_1f(gammaDeg: Double): Double {
-        return  cos(gammaDeg*PI/180)
+    fun getham_2f(d_a2f: Double, d_2: Double, m_x: Double, x_f: Double): Double {
+        return (d_a2f - d_2) / (2 * m_x) - x_f
     }
 
-    fun getda_1(d_m1: Double, hFf1f: Double, m_n: Double): Double {
-        return d_m1 + 2.0 * hFf1f * m_n
-    }
-
-    fun getdf_1(d_m1: Double, hFf1f: Double, cf1f: Double, m_n: Double): Double {
-        return d_m1 - 2.0 * (hFf1f + cf1f) * m_n
-    }
 
     // =============================
     // Validierung (wahrscheinlich müssen noch andere variablen auf 0 überprüft werden
     // =============================
 
-    private fun isValid(m_n: Double, z1: Double, z2: Double, a: Double, d_m1: Double): Boolean {
+    private fun isValid(m_n: Double, z1: Double, z2: Double, a: Double, d_m1: Double, d_a2f: Double): Boolean {
         return m_n > 0 &&
                 z1 > 0 &&
                 z2 > 0 &&
                 a > 0 &&
                 d_m1 > 0
+                d_a2f > 0
     }
 
     /**
@@ -177,10 +208,11 @@ class WormGearCalculator : ViewModel() {
         cf2f: Double,
         hFf1f: Double,
         hFf2f: Double,
-        gammaDeg: Double
+        gammaDeg: Double,
+        d_a2f: Double
     ): List<ResultItem> {
         // Überprüfe Input Variable auf 0, wenn 0 dann keine Berechnungen
-        if (!isValid(m_n, z1, z2, a, d_m1)) {
+        if (!isValid(m_n, z1, z2, a, d_m1, d_a2f)) {
             return emptyList()
         }
         // Rufe alle get Funktionen zum berechnen auf und speichere Wert in eigener Variable
@@ -189,22 +221,34 @@ class WormGearCalculator : ViewModel() {
         val resultm_x = getm_x(m_n, gammaDeg)
         val resultgamma_Rad = getgamma_Rad(z1, resultm_x, d_m1)
         val resultgamma_Grad = getgamma_Grad(resultgamma_Rad)
-        val resultd_2 = getd_2(resultm_x,z2)
         val resultx_f = getx_f(a, d_m1, resultm_x, z2)
-        val resultx_m = getx_m(resultx_f,resultm_x)
         val resultp_n = getp_n(m_n)
         val resultp_x = getp_x (resultm_x)
         val resultp_z = getp_z (resultp_x, z1)
         val resultp = getp (resultp_z)
-        val resultham_1f = getham_1f (gammaDeg)
+
 
         // Berechne Rad
+        val resultd_2 = getd_2(resultm_x,z2)
+        val resultx_m = getx_m(resultx_f,resultm_x)
+        val resultdm_2 = getdm_2(resultd_2, resultx_m)
+        val resultham_2f = getham_2f(d_a2f, resultd_2, resultm_x, resultx_f)
         val resulthfm_2 = gethfm_2(hFf2f, cf2f, m_n, resultx_m)
         val resultdf_2 = getdf_2(resultd_2, resulthfm_2)
         val resulth_2 = geth_2(hFf2f, m_n, resultx_m)
         // Berechnung Schnecke
+        val resultham_1f = getham_1f (gammaDeg)
+        val resultham_1 = getham_1(resultham_1f, resultm_x)
         val resultda_1 = getda_1(d_m1, hFf1f, m_n)
-        val resultdf_1 = getdf_1(d_m1, hFf1f, cf1f, m_n)
+        val resultra_1 = getra_1(resultda_1)
+        val resulthfm_1 = gethfm_1(resultm_x, hFf1f, cf1f)
+        val resultdf_1 = getdf_1(d_m1, resulthfm_1)
+        val resultrf_1 = getrf_1(resultdf_1)
+        val resulth_1 = geth_1(resulthfm_1, resultham_1)
+
+
+
+
         return listOf(ResultItem("Axialmodul m_x",String.format("%.${NUMBER_PRECISION}f", resultm_x), ""),
             ResultItem("Mittensteigungswinkel in rad", String.format("%.${NUMBER_PRECISION}f", resultgamma_Rad), ""),
             ResultItem("Mittensteigungswinkel in Grad", String.format("%.${NUMBER_PRECISION}f", resultgamma_Grad), "°"),
@@ -213,14 +257,21 @@ class WormGearCalculator : ViewModel() {
             ResultItem("Schneckenganghöhe p_z", String.format("%.${NUMBER_PRECISION}f", resultp_z), "mm"),
             ResultItem("Schraubparameter p", String.format("%.${NUMBER_PRECISION}f", resultp), "mm"),
             ResultItem("Kopfhöhenfaktor Schnecke ham_1f", String.format("%.${NUMBER_PRECISION}f", resultham_1f), ""),
+            ResultItem("Zahnkopfhöhe Schnecke ham_1", String.format("%.${NUMBER_PRECISION}f", resultham_1), ""),
+            ResultItem("Kopfkreisdurchmesser Schnecke da_1",String.format("%.${NUMBER_PRECISION}f", resultda_1),"mm"),
+            ResultItem("Kopfkreisradius Schnecke ra_1",String.format("%.${NUMBER_PRECISION}f", resultra_1),"mm"),
+            ResultItem("Zahnfußhöhe Schnecke hfm_1",String.format("%.${NUMBER_PRECISION}f", resulthfm_1),"mm"),
+            ResultItem("Fußkreisdurchmesser Schnecke df_1", String.format("%.${NUMBER_PRECISION}f", resultdf_1), "mm"),
+            ResultItem("Fußkreisradius Schnecke rf_1", String.format("%.${NUMBER_PRECISION}f", resultrf_1), "mm"),
+            ResultItem("Zahnhöhe Schnecke h_1", String.format("%.${NUMBER_PRECISION}f", resulth_1), "mm"),
             ResultItem("Teilkreisdurchmesser Rad d_2", String.format("%.${NUMBER_PRECISION}f", resultd_2), "mm"),
             ResultItem("Profilverschiebungsfaktor x_f",String.format("%.${NUMBER_PRECISION}f", resultx_f),""),
             ResultItem("Profilverschiebung x_m",String.format("%.${NUMBER_PRECISION}f", resultx_m), "mm"),
+            ResultItem("Mittenkreisdurchmesser Rad dm_2",String.format("%.${NUMBER_PRECISION}f", resultdm_2), "mm"),
+            ResultItem("Kopfhöhenfaktor Rad ham_2f",String.format("%.${NUMBER_PRECISION}f", resultham_2f), "mm"),
             ResultItem("Zahnfußhöhe Rad hfm_2", String.format("%.${NUMBER_PRECISION}f", resulthfm_2),"mm"),
             ResultItem("Fußkreisdurchmesser Rad df_2", String.format("%.${NUMBER_PRECISION}f", resultdf_2),"mm"),
             ResultItem("Zahnhöhe Rad h_2", String.format("%.${NUMBER_PRECISION}f", resulth_2),"mm"),
-            ResultItem("Kopfkreisdurchmesser Schnecke da_1",String.format("%.${NUMBER_PRECISION}f", resultda_1),"mm"),
-            ResultItem("Fußkreisdurchmesser Schnecke df_1", String.format("%.${NUMBER_PRECISION}f", resultdf_1), "mm")
         )
     }
 
