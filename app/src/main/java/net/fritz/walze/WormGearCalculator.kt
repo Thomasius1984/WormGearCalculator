@@ -80,19 +80,19 @@ class WormGearCalculator : ViewModel() {
         return gammaDeg * PI / 180.0
     }
 
-    fun getM_x(m_n: Double, gammaRad: Double): Double {
+    fun getm_x(m_n: Double, gammaRad: Double): Double {
         return m_n / cos(gammaRad)
     }
 
-    fun getD_2(m_x: Double, z2: Double): Double {
+    fun getd_2(m_x: Double, z2: Double): Double {
         return m_x * z2
     }
 
-    fun getX_f(a: Double, d_m1: Double, m_x: Double, z2: Double): Double {
+    fun getx_f(a: Double, d_m1: Double, m_x: Double, z2: Double): Double {
         return (2 * a - d_m1 - m_x * z2) / (2 * m_x)
     }
 
-    fun getX_m(x_f: Double, m_x: Double): Double {
+    fun getx_m(x_f: Double, m_x: Double): Double {
         return x_f * m_x
     }
 
@@ -100,15 +100,15 @@ class WormGearCalculator : ViewModel() {
     // Rad
     // =============================
 
-    fun getHfm_2(hFf2f: Double, cf2f: Double, m_n: Double, x_m: Double): Double {
+    fun gethfm_2(hFf2f: Double, cf2f: Double, m_n: Double, x_m: Double): Double {
         return (hFf2f + cf2f) * m_n - x_m
     }
 
-    fun getDf_2(d_2: Double, hfm_2: Double): Double {
+    fun getdf_2(d_2: Double, hfm_2: Double): Double {
         return d_2 - 2.0 * hfm_2
     }
 
-    fun getHa_2(hFf2f: Double, m_n: Double, x_m: Double): Double {
+    fun geth_2(hFf2f: Double, m_n: Double, x_m: Double): Double {
         return hFf2f * m_n + x_m
     }
 
@@ -116,11 +116,11 @@ class WormGearCalculator : ViewModel() {
     // Schnecke
     // =============================
 
-    fun getDa_1(d_m1: Double, hFf1f: Double, m_n: Double): Double {
+    fun getda_1(d_m1: Double, hFf1f: Double, m_n: Double): Double {
         return d_m1 + 2.0 * hFf1f * m_n
     }
 
-    fun getDf_1(d_m1: Double, hFf1f: Double, cf1f: Double, m_n: Double): Double {
+    fun getdf_1(d_m1: Double, hFf1f: Double, cf1f: Double, m_n: Double): Double {
         return d_m1 - 2.0 * (hFf1f + cf1f) * m_n
     }
 
@@ -159,26 +159,26 @@ class WormGearCalculator : ViewModel() {
         // Rufe alle get Funktionen zum berechnen auf und speichere Wert in eigener Variable
         // Berechne Grundfunktionen
         val resultGammaRad = getGammaRad(gammaDeg)
-        val resultM_x = getM_x(m_n, resultGammaRad)
-        val resultD_2 = getD_2(resultM_x,z2)
-        val resultX_f = getX_f(a, d_m1, resultM_x, z2)
-        val resultX_m = getX_m(resultX_f,resultM_x)
+        val resultM_x = getm_x(m_n, resultGammaRad)
+        val resultD_2 = getd_2(resultM_x,z2)
+        val resultX_f = getx_f(a, d_m1, resultM_x, z2)
+        val resultX_m = getx_m(resultX_f,resultM_x)
         // Berechne Rad
-        val resultHfm_2 = getHfm_2(hFf2f, cf2f, m_n, resultX_m)
-        val resultDf_2 = getDf_2(resultD_2, resultHfm_2)
-        val resultHa_2 = getHa_2(hFf2f, m_n, resultX_m)
+        val resultHfm_2 = gethfm_2(hFf2f, cf2f, m_n, resultX_m)
+        val resultDf_2 = getdf_2(resultD_2, resultHfm_2)
+        val resultHa_2 = geth_2(hFf2f, m_n, resultX_m)
         // Berechnung Schnecke
-        val resultDa_1 = getDa_1(d_m1, hFf1f, m_n)
-        val resultDf_1 = getDf_1(d_m1, hFf1f, cf1f, m_n)
+        val resultDa_1 = getda_1(d_m1, hFf1f, m_n)
+        val resultDf_1 = getdf_1(d_m1, hFf1f, cf1f, m_n)
         return listOf(ResultItem("Axialmodul m_x",String.format("%.${NUMBER_PRECISION}f", resultM_x), "mm"),
-            ResultItem("D_2", String.format("%.${NUMBER_PRECISION}f", resultD_2), "mm"),
-            ResultItem("X_f",String.format("%.${NUMBER_PRECISION}f", resultX_f),""),
-            ResultItem("X_m",String.format("%.${NUMBER_PRECISION}f", resultX_m), "mm"),
-            ResultItem("Hfm_2", String.format("%.${NUMBER_PRECISION}f", resultHfm_2),"mm"),
-            ResultItem("Df_2", String.format("%.${NUMBER_PRECISION}f", resultDf_2),"mm"),
-            ResultItem("Ha_2", String.format("%.${NUMBER_PRECISION}f", resultHa_2),"mm"),
-            ResultItem("Da_1",String.format("%.${NUMBER_PRECISION}f", resultDa_1),"mm"),
-            ResultItem("Df_1", String.format("%.${NUMBER_PRECISION}f", resultDf_1), "mm")
+            ResultItem("Teilkreisdurchmesser Rad d_2", String.format("%.${NUMBER_PRECISION}f", resultD_2), "mm"),
+            ResultItem("Profilverschiebungsfaktor x_f",String.format("%.${NUMBER_PRECISION}f", resultX_f),""),
+            ResultItem("Profilverschiebung x_m",String.format("%.${NUMBER_PRECISION}f", resultX_m), "mm"),
+            ResultItem("Zahnfußhöhe Rad hfm_2", String.format("%.${NUMBER_PRECISION}f", resultHfm_2),"mm"),
+            ResultItem("Fußkreisdurchmesser Rad df_2", String.format("%.${NUMBER_PRECISION}f", resultDf_2),"mm"),
+            ResultItem("Zahnhöhe Rad h_2", String.format("%.${NUMBER_PRECISION}f", resultHa_2),"mm"),
+            ResultItem("Kopfkreisdurchmesser Schnecke da_1",String.format("%.${NUMBER_PRECISION}f", resultDa_1),"mm"),
+            ResultItem("Fußkreisdurchmesser Schnecke df_1", String.format("%.${NUMBER_PRECISION}f", resultDf_1), "mm")
         )
     }
 
