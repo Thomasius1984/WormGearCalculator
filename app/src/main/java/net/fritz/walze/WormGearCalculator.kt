@@ -89,9 +89,7 @@ class WormGearCalculator : ViewModel() {
 
     }
 
-    fun getd_2(m_x: Double, z2: Double): Double {
-        return m_x * z2
-    }
+
 
     fun getx_f(a: Double, d_m1: Double, m_x: Double, z2: Double): Double {
         return (2 * a - d_m1 - m_x * z2) / (2 * m_x)
@@ -117,13 +115,13 @@ class WormGearCalculator : ViewModel() {
         return p_z/2/PI
     }
 
-    fun getham_1f(gammaDeg: Double): Double {
-        return  cos(gammaDeg*PI/180)
-    }
-
     // =============================
     // Rad
     // =============================
+
+    fun getd_2(m_x: Double, z2: Double): Double {
+        return m_x * z2
+    }
 
     fun gethfm_2(hFf2f: Double, cf2f: Double, m_n: Double, x_m: Double): Double {
         return (hFf2f + cf2f) * m_n - x_m
@@ -140,6 +138,10 @@ class WormGearCalculator : ViewModel() {
     // =============================
     // Schnecke
     // =============================
+
+    fun getham_1f(gammaDeg: Double): Double {
+        return  cos(gammaDeg*PI/180)
+    }
 
     fun getda_1(d_m1: Double, hFf1f: Double, m_n: Double): Double {
         return d_m1 + 2.0 * hFf1f * m_n
