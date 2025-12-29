@@ -19,7 +19,7 @@ class WormGearCalculator : ViewModel() {
     private val _m_n = MutableStateFlow(1.25)
     val m_n: StateFlow<Double> = _m_n
 
-    private val _gamma_degrees = MutableStateFlow(15.68)
+    private val _gamma_degrees = MutableStateFlow(15.6804)
     val gamma_degrees: StateFlow<Double> = _gamma_degrees
 
     private val _z1 = MutableStateFlow(4.0)
@@ -51,7 +51,7 @@ class WormGearCalculator : ViewModel() {
     private val _cf2f = MutableStateFlow(0.2)    // Rad
     val cf2f: StateFlow<Double> = _cf2f
 
-    private val _d_a2f = MutableStateFlow(0.0)   // Kopfkreisdurchmesser Rad (Eingabe)
+    private val _d_a2f = MutableStateFlow(24.0)   // Kopfkreisdurchmesser Rad (Eingabe)
     val d_a2f: StateFlow<Double> = _d_a2f
 
 
@@ -76,12 +76,17 @@ class WormGearCalculator : ViewModel() {
     // Grundfunktionen
     // =============================
 
-    fun getGammaRad(gammaDeg: Double): Double {
-        return gammaDeg * PI / 180.0
+    fun getm_x(m_n: Double, gamma_degrees: Double): Double {
+        return m_n / cos(gamma_degrees*PI/180)
     }
 
-    fun getm_x(m_n: Double, gammaRad: Double): Double {
-        return m_n / cos(gammaRad)
+    fun getgamma_Rad(z1: Double, m_x: Double, d_m1: Double): Double {
+        return atan(z1 * m_x / d_m1)
+    }
+
+    fun getgamma_Grad(gamma_Rad: Double): Double {
+        return gamma_Rad * 180 / PI
+
     }
 
     fun getd_2(m_x: Double, z2: Double): Double {
@@ -94,6 +99,26 @@ class WormGearCalculator : ViewModel() {
 
     fun getx_m(x_f: Double, m_x: Double): Double {
         return x_f * m_x
+    }
+
+    fun getp_n(m_n: Double): Double {
+        return m_n * PI
+    }
+
+    fun getp_x(m_x: Double): Double {
+        return m_x * PI
+    }
+
+    fun getp_z(p_x: Double, z1: Double): Double {
+        return p_x * z1
+    }
+
+    fun getp(p_z: Double): Double {
+        return p_z/2/PI
+    }
+
+    fun getham_1f(gammaDeg: Double): Double {
+        return  cos(gammaDeg*PI/180)
     }
 
     // =============================
@@ -158,11 +183,19 @@ class WormGearCalculator : ViewModel() {
         }
         // Rufe alle get Funktionen zum berechnen auf und speichere Wert in eigener Variable
         // Berechne Grundfunktionen
-        val resultGammaRad = getGammaRad(gammaDeg)
-        val resultm_x = getm_x(m_n, resultGammaRad)
+
+        val resultm_x = getm_x(m_n, gammaDeg)
+        val resultgamma_Rad = getgamma_Rad(z1, resultm_x, d_m1)
+        val resultgamma_Grad = getgamma_Grad(resultgamma_Rad)
         val resultd_2 = getd_2(resultm_x,z2)
         val resultx_f = getx_f(a, d_m1, resultm_x, z2)
         val resultx_m = getx_m(resultx_f,resultm_x)
+        val resultp_n = getp_n(m_n)
+        val resultp_x = getp_x (resultm_x)
+        val resultp_z = getp_z (resultp_x, z1)
+        val resultp = getp (resultp_z)
+        val resultham_1f = getham_1f (gammaDeg)
+
         // Berechne Rad
         val resulthfm_2 = gethfm_2(hFf2f, cf2f, m_n, resultx_m)
         val resultdf_2 = getdf_2(resultd_2, resulthfm_2)
@@ -170,7 +203,14 @@ class WormGearCalculator : ViewModel() {
         // Berechnung Schnecke
         val resultda_1 = getda_1(d_m1, hFf1f, m_n)
         val resultdf_1 = getdf_1(d_m1, hFf1f, cf1f, m_n)
-        return listOf(ResultItem("Axialmodul m_x",String.format("%.${NUMBER_PRECISION}f", resultm_x), "mm"),
+        return listOf(ResultItem("Axialmodul m_x",String.format("%.${NUMBER_PRECISION}f", resultm_x), ""),
+            ResultItem("Mittensteigungswinkel in rad", String.format("%.${NUMBER_PRECISION}f", resultgamma_Rad), ""),
+            ResultItem("Mittensteigungswinkel in Grad", String.format("%.${NUMBER_PRECISION}f", resultgamma_Grad), "°"),
+            ResultItem("Normalteilung p_n", String.format("%.${NUMBER_PRECISION}f", resultp_n), "mm"),
+            ResultItem("Axialteilung p_x", String.format("%.${NUMBER_PRECISION}f", resultp_x), "mm"),
+            ResultItem("Schneckenganghöhe p_z", String.format("%.${NUMBER_PRECISION}f", resultp_z), "mm"),
+            ResultItem("Schraubparameter p", String.format("%.${NUMBER_PRECISION}f", resultp), "mm"),
+            ResultItem("Kopfhöhenfaktor Schnecke ham_1f", String.format("%.${NUMBER_PRECISION}f", resultham_1f), ""),
             ResultItem("Teilkreisdurchmesser Rad d_2", String.format("%.${NUMBER_PRECISION}f", resultd_2), "mm"),
             ResultItem("Profilverschiebungsfaktor x_f",String.format("%.${NUMBER_PRECISION}f", resultx_f),""),
             ResultItem("Profilverschiebung x_m",String.format("%.${NUMBER_PRECISION}f", resultx_m), "mm"),
