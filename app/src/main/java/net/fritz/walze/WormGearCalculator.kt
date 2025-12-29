@@ -159,26 +159,26 @@ class WormGearCalculator : ViewModel() {
         // Rufe alle get Funktionen zum berechnen auf und speichere Wert in eigener Variable
         // Berechne Grundfunktionen
         val resultGammaRad = getGammaRad(gammaDeg)
-        val resultM_x = getm_x(m_n, resultGammaRad)
-        val resultD_2 = getd_2(resultM_x,z2)
-        val resultX_f = getx_f(a, d_m1, resultM_x, z2)
-        val resultX_m = getx_m(resultX_f,resultM_x)
+        val resultm_x = getm_x(m_n, resultGammaRad)
+        val resultd_2 = getd_2(resultm_x,z2)
+        val resultx_f = getx_f(a, d_m1, resultm_x, z2)
+        val resultx_m = getx_m(resultx_f,resultm_x)
         // Berechne Rad
-        val resultHfm_2 = gethfm_2(hFf2f, cf2f, m_n, resultX_m)
-        val resultDf_2 = getdf_2(resultD_2, resultHfm_2)
-        val resultHa_2 = geth_2(hFf2f, m_n, resultX_m)
+        val resulthfm_2 = gethfm_2(hFf2f, cf2f, m_n, resultx_m)
+        val resultdf_2 = getdf_2(resultd_2, resulthfm_2)
+        val resulth_2 = geth_2(hFf2f, m_n, resultx_m)
         // Berechnung Schnecke
-        val resultDa_1 = getda_1(d_m1, hFf1f, m_n)
-        val resultDf_1 = getdf_1(d_m1, hFf1f, cf1f, m_n)
-        return listOf(ResultItem("Axialmodul m_x",String.format("%.${NUMBER_PRECISION}f", resultM_x), "mm"),
-            ResultItem("Teilkreisdurchmesser Rad d_2", String.format("%.${NUMBER_PRECISION}f", resultD_2), "mm"),
-            ResultItem("Profilverschiebungsfaktor x_f",String.format("%.${NUMBER_PRECISION}f", resultX_f),""),
-            ResultItem("Profilverschiebung x_m",String.format("%.${NUMBER_PRECISION}f", resultX_m), "mm"),
-            ResultItem("Zahnfußhöhe Rad hfm_2", String.format("%.${NUMBER_PRECISION}f", resultHfm_2),"mm"),
-            ResultItem("Fußkreisdurchmesser Rad df_2", String.format("%.${NUMBER_PRECISION}f", resultDf_2),"mm"),
-            ResultItem("Zahnhöhe Rad h_2", String.format("%.${NUMBER_PRECISION}f", resultHa_2),"mm"),
-            ResultItem("Kopfkreisdurchmesser Schnecke da_1",String.format("%.${NUMBER_PRECISION}f", resultDa_1),"mm"),
-            ResultItem("Fußkreisdurchmesser Schnecke df_1", String.format("%.${NUMBER_PRECISION}f", resultDf_1), "mm")
+        val resultda_1 = getda_1(d_m1, hFf1f, m_n)
+        val resultdf_1 = getdf_1(d_m1, hFf1f, cf1f, m_n)
+        return listOf(ResultItem("Axialmodul m_x",String.format("%.${NUMBER_PRECISION}f", resultm_x), "mm"),
+            ResultItem("Teilkreisdurchmesser Rad d_2", String.format("%.${NUMBER_PRECISION}f", resultd_2), "mm"),
+            ResultItem("Profilverschiebungsfaktor x_f",String.format("%.${NUMBER_PRECISION}f", resultx_f),""),
+            ResultItem("Profilverschiebung x_m",String.format("%.${NUMBER_PRECISION}f", resultx_m), "mm"),
+            ResultItem("Zahnfußhöhe Rad hfm_2", String.format("%.${NUMBER_PRECISION}f", resulthfm_2),"mm"),
+            ResultItem("Fußkreisdurchmesser Rad df_2", String.format("%.${NUMBER_PRECISION}f", resultdf_2),"mm"),
+            ResultItem("Zahnhöhe Rad h_2", String.format("%.${NUMBER_PRECISION}f", resulth_2),"mm"),
+            ResultItem("Kopfkreisdurchmesser Schnecke da_1",String.format("%.${NUMBER_PRECISION}f", resultda_1),"mm"),
+            ResultItem("Fußkreisdurchmesser Schnecke df_1", String.format("%.${NUMBER_PRECISION}f", resultdf_1), "mm")
         )
     }
 
