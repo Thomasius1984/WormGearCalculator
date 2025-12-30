@@ -131,27 +131,28 @@ fun GreenInputField(
 
         TextField(
             value = textValue,
-            onValueChange = { newValue ->
+            onValueChange = { newValue: String ->
                 textValue = newValue
                 newValue
                     .replace(',', '.')
                     .toDoubleOrNull()
                     ?.let(onValueChange)
             },
-            modifier = Modifier.width(120.dp),
+            modifier = Modifier
+                .width(110.dp)
+                .height(44.dp)
+                .padding(horizontal = 4.dp),   // ✅ Ersatz für contentPadding
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             singleLine = true,
+            textStyle = MaterialTheme.typography.bodySmall,
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color(0xFFDFF5E3),
                 unfocusedContainerColor = Color(0xFFDFF5E3),
-
                 focusedTextColor = Color.Black,
                 unfocusedTextColor = Color.Black,
-
                 cursorColor = Color.Black
             )
         )
-
 
         if (unit.isNotEmpty()) {
             Spacer(Modifier.width(8.dp))

@@ -123,8 +123,8 @@ class WormGearCalculator : ViewModel() {
         return ham_1f * m_x
     }
 
-    fun getda_1(d_m1: Double, hFf1f: Double, m_n: Double): Double {
-        return d_m1 + 2.0 * hFf1f * m_n
+    fun getda_1(d_m1: Double, ham_1: Double): Double {
+        return d_m1 + 2.0 * ham_1
     }
 
     fun getra_1(da_1: Double): Double {
@@ -145,6 +145,10 @@ class WormGearCalculator : ViewModel() {
 
     fun geth_1(hfm_1: Double, ham_1: Double): Double {
         return hfm_1 + ham_1
+    }
+
+    fun getc_1(a: Double, da_1: Double, df_2: Double): Double {
+        return a - (da_1/2 + df_2/2)
     }
 
     // =============================
@@ -187,7 +191,13 @@ class WormGearCalculator : ViewModel() {
         return ham_2 + hfm_2
     }
 
+    fun getc_2(a: Double, da_2: Double, df_1: Double): Double {
+        return a - (da_2/2 + df_1/2)
+    }
 
+    fun geta(d_m1: Double, dm_2: Double): Double {
+        return (d_m1 + dm_2)/2
+    }
 
 
     // =============================
@@ -236,7 +246,6 @@ class WormGearCalculator : ViewModel() {
         val resultp_z = getp_z (resultp_x, z1)
         val resultp = getp (resultp_z)
 
-
         // Berechne Rad
         val resultd_2 = getd_2(resultm_x,z2)
         val resultx_m = getx_m(resultx_f,resultm_x)
@@ -247,15 +256,22 @@ class WormGearCalculator : ViewModel() {
         val resulthfm_2 = gethfm_2(hFf2f, cf2f, resultm_x)
         val resultdf_2 = getdf_2(resultdm_2, resulthfm_2)
         val resulth_2 = geth_2(resultham_2, resulthfm_2)
+
+
         // Berechnung Schnecke
         val resultham_1f = getham_1f (gammaDeg)
         val resultham_1 = getham_1(resultham_1f, resultm_x)
-        val resultda_1 = getda_1(d_m1, hFf1f, m_n)
+        val resultda_1 = getda_1(d_m1, resultham_1)
         val resultra_1 = getra_1(resultda_1)
         val resulthfm_1 = gethfm_1(resultm_x, hFf1f, cf1f)
         val resultdf_1 = getdf_1(d_m1, resulthfm_1)
         val resultrf_1 = getrf_1(resultdf_1)
         val resulth_1 = geth_1(resulthfm_1, resultham_1)
+
+        val resultc_1 = getc_1(a, resultda_1, resultdf_2)
+        val resultc_2 = getc_2(a, resultda_2, resultdf_1)
+        val resulta = geta(d_m1, resultdm_2)
+
 
 
 
@@ -285,6 +301,9 @@ class WormGearCalculator : ViewModel() {
             ResultItem("Zahnfußhöhe Rad hfm_2", String.format("%.${NUMBER_PRECISION}f", resulthfm_2),"mm"),
             ResultItem("Fußkreisdurchmesser Rad df_2", String.format("%.${NUMBER_PRECISION}f", resultdf_2),"mm"),
             ResultItem("Zahnhöhe Rad h_2", String.format("%.${NUMBER_PRECISION}f", resulth_2),"mm"),
+            ResultItem("Kopfspiel Schnecke c_1", String.format("%.${NUMBER_PRECISION}f", resultc_1),"mm"),
+            ResultItem("Kopfspiel Rad c_2", String.format("%.${NUMBER_PRECISION}f", resultc_2),"mm"),
+            ResultItem("Achsabstand aus dm_1 und dm_2", String.format("%.${NUMBER_PRECISION}f", resulta),"mm")
         )
     }
 
