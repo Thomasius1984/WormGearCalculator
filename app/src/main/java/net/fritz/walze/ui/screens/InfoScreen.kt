@@ -65,7 +65,7 @@ fun InfoScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             
-            Text("• Eingabewerte in der Eingabe-Ansicht ändern", style = MaterialTheme.typography.bodySmall)
+            Text("• Eingabewerte in der Eingabeansicht ändern", style = MaterialTheme.typography.bodySmall)
             Text("• Ergebnisse werden automatisch berechnet", style = MaterialTheme.typography.bodySmall)
             Text("• Diese App stellt ingenieurmäßige Berechnungen nach allgemein bekannten Formeln des Maschinenbaus bereit.\n" +
                     "Die Inhalte ersetzen keine Normen und keine\n" +
