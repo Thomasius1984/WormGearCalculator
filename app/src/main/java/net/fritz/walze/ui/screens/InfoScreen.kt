@@ -38,12 +38,8 @@ fun InfoScreen(modifier: Modifier = Modifier) {
             title = "Grundlagen",
             rows = listOf(
                 FormulaRow(
-                    "Mittensteigungswinkel γ (rad)",
-                    "γ = arctan(Z₁ · mₙ / dₘ₁)"
-                ),
-                FormulaRow(
                     "Mittensteigungswinkel γ (Grad)",
-                    "γ° = γ · 180 / π"
+                    "γ = arctan(Z₁ · m_x / dm₁)"
                 ),
                 FormulaRow(
                     "Axialmodul",
@@ -81,31 +77,31 @@ fun InfoScreen(modifier: Modifier = Modifier) {
             rows = listOf(
                 FormulaRow(
                     "Kopfhöhe Schnecke",
-                    "hₐ₁ = hₐₘ₁ · mₓ"
+                    "ha₁ = ham₁ · mₓ"
                 ),
                 FormulaRow(
                     "Kopfkreisdurchmesser",
-                    "dₐ₁ = dₘ₁ + 2·hₐ₁"
+                    "da₁ = dm₁ + 2·ha₁"
                 ),
                 FormulaRow(
                     "Kopfkreisradius",
-                    "rₐ₁ = dₐ₁ / 2"
+                    "ra₁ = da₁ / 2"
                 ),
                 FormulaRow(
                     "Fußhöhe Schnecke",
-                    "h_f₁ = mₓ · (h_Ff₁f + c_f₁f)"
+                    "h_f₁ = mₓ · (hFf₁f + cf₁f)"
                 ),
                 FormulaRow(
                     "Fußkreisdurchmesser",
-                    "d_f₁ = dₘ₁ − 2·h_f₁"
+                    "d_f₁ = dm₁ − 2·hf₁"
                 ),
                 FormulaRow(
                     "Fußkreisradius",
-                    "r_f₁ = d_f₁ / 2"
+                    "r_f₁ = df₁ / 2"
                 ),
                 FormulaRow(
                     "Zahnhöhe Schnecke",
-                    "h₁ = hₐ₁ + h_f₁"
+                    "h₁ = ha₁ + hf₁"
                 )
             )
         )
@@ -123,27 +119,27 @@ fun InfoScreen(modifier: Modifier = Modifier) {
                 ),
                 FormulaRow(
                     "Mittenkreisdurchmesser",
-                    "dₘ₂ = d₂ + 2·xₘ"
+                    "dm₂ = d₂ + 2·xₘ"
                 ),
                 FormulaRow(
                     "Kopfhöhe Rad",
-                    "hₐ₂ = hₐₘ₂ · mₓ"
+                    "ha₂ = ham₂ · mₓ"
                 ),
                 FormulaRow(
                     "Kopfkreisdurchmesser",
-                    "dₐ₂ = dₘ₂ + 2·hₐ₂"
+                    "da₂ = dm₂ + 2·hₐ₂"
                 ),
                 FormulaRow(
                     "Fußhöhe Rad",
-                    "h_f₂ = mₓ · (h_Ff₂f + c_f₂f)"
+                    "hf₂ = mₓ · (hFf₂f + cf₂f)"
                 ),
                 FormulaRow(
                     "Fußkreisdurchmesser",
-                    "d_f₂ = d₂ − 2·h_f₂"
+                    "df₂ = d₂ − 2·hf₂"
                 ),
                 FormulaRow(
                     "Zahnhöhe Rad",
-                    "h₂ = hₐ₂ + h_f₂"
+                    "h₂ = ha₂ + hf₂"
                 )
             )
         )
@@ -153,11 +149,11 @@ fun InfoScreen(modifier: Modifier = Modifier) {
             rows = listOf(
                 FormulaRow(
                     "Kopfhöhenfaktor Schnecke",
-                    "hₐₘ₁ = cos(γ)"
+                    "hamf₁ = cos(γ)"
                 ),
                 FormulaRow(
                     "Kopfhöhenfaktor Schneckenrad (Näherung)",
-                    "hₐₘ₂ ≈ (dₐ₂f − dₘ₂) / (2·mₓ)"
+                    "hamf₂ ≈ (da₂f − dm₂) / (2·mₓ) - x_f"
                 )
             )
         )
@@ -167,7 +163,7 @@ fun InfoScreen(modifier: Modifier = Modifier) {
             rows = listOf(
                 FormulaRow(
                     "Achsabstand",
-                    "a = (dₘ₁ + dₘ₂) / 2"
+                    "a = (dm₁ + dm₂) / 2"
                 )
             )
         )
@@ -183,7 +179,7 @@ fun InfoScreen(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text = "© 2025 Thomas Fritz vom SuperSchleiferFreundeClub :DDD",
+            text = "© 2025 Thomas Fritz vom SuperSchleiferFreundeClub",
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
