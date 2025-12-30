@@ -59,7 +59,7 @@ fun IntroScreen(onContinue: () -> Unit) {
                     containerColor = Color(0xFFE53935)
                 )
             ) {
-                Text("Start", color = Color.White)
+                Text("Drück mich :D", color = Color.White)
             }
         }
     }
