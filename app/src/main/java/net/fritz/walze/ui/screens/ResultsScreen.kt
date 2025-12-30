@@ -60,7 +60,7 @@ fun ResultsScreen(
 
     Column(modifier = modifier.fillMaxSize()) {
         Text(
-            text = "Berechnungsergebnisse",
+            text = "Ergebnisse Schneckenwelle und Rad",
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier
                 .padding(16.dp)

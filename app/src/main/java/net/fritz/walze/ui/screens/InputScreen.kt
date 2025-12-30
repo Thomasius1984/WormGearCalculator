@@ -47,7 +47,7 @@ fun InputScreen(
 
         SectionHeader("Grundparameter")
 
-        GreenInputField("Normalmodul mₙ", m_n, calculator::setM_n, "")
+        GreenInputField("Normalmodul m_n", m_n, calculator::setM_n, "")
         GreenInputField("Mittensteigungswinkel γ", gamma_degrees, calculator::setGamma_degrees, "°")
         GreenInputField("Gangzahl Schnecke Z₁", z1, calculator::setZ1, "")
         GreenInputField("Zähnezahl Rad Z₂", z2, calculator::setZ2, "")
@@ -56,8 +56,8 @@ fun InputScreen(
         Spacer(Modifier.height(16.dp))
         SectionHeader("Durchmesser & Winkel")
 
-        GreenInputField("Mittenkreisdurchmesser dₘ₁", d_m1, calculator::setD_m1, "mm")
-        GreenInputField("Normaleingriffswinkel αₙz", alf_nz, calculator::setAlf_nz, "°")
+        GreenInputField("Mittenkreisdurchmesser dm_1", d_m1, calculator::setD_m1, "mm")
+        GreenInputField("Normaleingriffswinkel αn_z", alf_nz, calculator::setAlf_nz, "°")
 
         Spacer(Modifier.height(16.dp))
         SectionHeader("Fuß- und Kopffaktoren")
@@ -91,7 +91,7 @@ fun InputScreen(
         )
 
         GreenInputField(
-            "Kopfkreisdurchmesser Schneckenrad dₐ2f (für hₐm₂f)",
+            "Kopfkreisdurchmesser Schneckenrad da_2f (für ham_2f)",
             d_a2f,
             calculator::setDA2f,
             "mm"
@@ -143,9 +143,15 @@ fun GreenInputField(
             singleLine = true,
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color(0xFFDFF5E3),
-                unfocusedContainerColor = Color(0xFFDFF5E3)
+                unfocusedContainerColor = Color(0xFFDFF5E3),
+
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black,
+
+                cursorColor = Color.Black
             )
         )
+
 
         if (unit.isNotEmpty()) {
             Spacer(Modifier.width(8.dp))

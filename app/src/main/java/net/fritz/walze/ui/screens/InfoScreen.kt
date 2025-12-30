@@ -50,7 +50,7 @@ fun InfoScreen(modifier: Modifier = Modifier) {
             )
             
             FormulaItem("Axialmodul", "m_x = m_n / cos(γ)")
-            FormulaItem("Profilverschiebungsfaktor", "x_f = (a - m_n(Z₁ + Z₂)/2) / m_n")
+            FormulaItem("Profilverschiebungsfaktor", "x_f = (a - m_x(Z₁ + Z₂)/2) / m_x")
             FormulaItem("Normale Teilung", "p_n = π × m_n")
             FormulaItem("Axialteilung", "p_x = π × m_x")
         }
@@ -67,7 +67,9 @@ fun InfoScreen(modifier: Modifier = Modifier) {
             
             Text("• Eingabewerte in der Eingabe-Ansicht ändern", style = MaterialTheme.typography.bodySmall)
             Text("• Ergebnisse werden automatisch berechnet", style = MaterialTheme.typography.bodySmall)
-            Text("• Alle Berechnungen basieren auf DIN-Normen für Schneckengetriebe", style = MaterialTheme.typography.bodySmall)
+            Text("• Diese App stellt ingenieurmäßige Berechnungen nach allgemein bekannten Formeln des Maschinenbaus bereit.\n" +
+                    "Die Inhalte ersetzen keine Normen und keine\n" +
+                    "konstruktive Prüfung nach DIN.", style = MaterialTheme.typography.bodySmall)
         }
 
         Divider(modifier = Modifier.padding(vertical = 16.dp))

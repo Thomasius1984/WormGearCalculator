@@ -163,22 +163,31 @@ class WormGearCalculator : ViewModel() {
         return d_2 + (2.0 * x_m)
     }
 
-    fun gethfm_2(hFf2f: Double, cf2f: Double, m_n: Double, x_m: Double): Double {
-        return (hFf2f + cf2f) * m_n - x_m
-    }
-
-    fun getdf_2(d_2: Double, hfm_2: Double): Double {
-        return d_2 - 2.0 * hfm_2
-    }
-
-    fun geth_2(hFf2f: Double, m_n: Double, x_m: Double): Double {
-        return hFf2f * m_n + x_m
-    }
-
-
     fun getham_2f(d_a2f: Double, d_2: Double, m_x: Double, x_f: Double): Double {
         return (d_a2f - d_2) / (2 * m_x) - x_f
     }
+
+    fun getham_2(ham_2f: Double, m_x: Double): Double {
+        return ham_2f * m_x
+    }
+
+    fun getda_2(dm_2: Double, ham_2: Double): Double {
+        return dm_2 + 2 * ham_2
+    }
+
+    fun gethfm_2(hFf2f: Double, cf2f: Double, m_x: Double): Double {
+        return (hFf2f + cf2f) * m_x
+    }
+
+    fun getdf_2(dm_2: Double, hfm_2: Double): Double {
+        return dm_2 - 2.0 * hfm_2
+    }
+
+    fun geth_2(ham_2: Double, hfm_2: Double): Double {
+        return ham_2 + hfm_2
+    }
+
+
 
 
     // =============================
@@ -233,9 +242,11 @@ class WormGearCalculator : ViewModel() {
         val resultx_m = getx_m(resultx_f,resultm_x)
         val resultdm_2 = getdm_2(resultd_2, resultx_m)
         val resultham_2f = getham_2f(d_a2f, resultd_2, resultm_x, resultx_f)
-        val resulthfm_2 = gethfm_2(hFf2f, cf2f, m_n, resultx_m)
-        val resultdf_2 = getdf_2(resultd_2, resulthfm_2)
-        val resulth_2 = geth_2(hFf2f, m_n, resultx_m)
+        val resultham_2 = getham_2(resultham_2f, resultm_x)
+        val resultda_2 = getda_2(resultdm_2, resultham_2)
+        val resulthfm_2 = gethfm_2(hFf2f, cf2f, resultm_x)
+        val resultdf_2 = getdf_2(resultdm_2, resulthfm_2)
+        val resulth_2 = geth_2(resultham_2, resulthfm_2)
         // Berechnung Schnecke
         val resultham_1f = getham_1f (gammaDeg)
         val resultham_1 = getham_1(resultham_1f, resultm_x)
@@ -257,7 +268,7 @@ class WormGearCalculator : ViewModel() {
             ResultItem("Schneckenganghöhe p_z", String.format("%.${NUMBER_PRECISION}f", resultp_z), "mm"),
             ResultItem("Schraubparameter p", String.format("%.${NUMBER_PRECISION}f", resultp), "mm"),
             ResultItem("Kopfhöhenfaktor Schnecke ham_1f", String.format("%.${NUMBER_PRECISION}f", resultham_1f), ""),
-            ResultItem("Zahnkopfhöhe Schnecke ham_1", String.format("%.${NUMBER_PRECISION}f", resultham_1), ""),
+            ResultItem("Zahnkopfhöhe Schnecke ham_1", String.format("%.${NUMBER_PRECISION}f", resultham_1), "mm"),
             ResultItem("Kopfkreisdurchmesser Schnecke da_1",String.format("%.${NUMBER_PRECISION}f", resultda_1),"mm"),
             ResultItem("Kopfkreisradius Schnecke ra_1",String.format("%.${NUMBER_PRECISION}f", resultra_1),"mm"),
             ResultItem("Zahnfußhöhe Schnecke hfm_1",String.format("%.${NUMBER_PRECISION}f", resulthfm_1),"mm"),
@@ -268,7 +279,9 @@ class WormGearCalculator : ViewModel() {
             ResultItem("Profilverschiebungsfaktor x_f",String.format("%.${NUMBER_PRECISION}f", resultx_f),""),
             ResultItem("Profilverschiebung x_m",String.format("%.${NUMBER_PRECISION}f", resultx_m), "mm"),
             ResultItem("Mittenkreisdurchmesser Rad dm_2",String.format("%.${NUMBER_PRECISION}f", resultdm_2), "mm"),
-            ResultItem("Kopfhöhenfaktor Rad ham_2f",String.format("%.${NUMBER_PRECISION}f", resultham_2f), "mm"),
+            ResultItem("Kopfhöhenfaktor Rad ham_2f",String.format("%.${NUMBER_PRECISION}f", resultham_2f), ""),
+            ResultItem("Zahnkopfhöhe Rad ham_2",String.format("%.${NUMBER_PRECISION}f", resultham_2), "mm"),
+            ResultItem("Kopfkreisdurchmesser Rad da_2",String.format("%.${NUMBER_PRECISION}f", resultda_2), "mm"),
             ResultItem("Zahnfußhöhe Rad hfm_2", String.format("%.${NUMBER_PRECISION}f", resulthfm_2),"mm"),
             ResultItem("Fußkreisdurchmesser Rad df_2", String.format("%.${NUMBER_PRECISION}f", resultdf_2),"mm"),
             ResultItem("Zahnhöhe Rad h_2", String.format("%.${NUMBER_PRECISION}f", resulth_2),"mm"),
