@@ -199,6 +199,9 @@ class WormGearCalculator : ViewModel() {
         return (d_m1 + dm_2)/2
     }
 
+    fun getu(z2: Double, z1: Double): Double {
+        return z2 / z1
+    }
 
     // =============================
     // Validierung (wahrscheinlich müssen noch andere variablen auf 0 überprüft werden
@@ -270,6 +273,7 @@ class WormGearCalculator : ViewModel() {
 
         val resultc_1 = getc_1(a, resultda_1, resultdf_2)
         val resultc_2 = getc_2(a, resultda_2, resultdf_1)
+        val resultu = getu(z2, z1)
         val resulta = geta(d_m1, resultdm_2)
 
 
@@ -303,6 +307,7 @@ class WormGearCalculator : ViewModel() {
             ResultItem("Zahnhöhe Rad h_2", String.format("%.${NUMBER_PRECISION}f", resulth_2),"mm"),
             ResultItem("Kopfspiel Schnecke c_1", String.format("%.${NUMBER_PRECISION}f", resultc_1),"mm"),
             ResultItem("Kopfspiel Rad c_2", String.format("%.${NUMBER_PRECISION}f", resultc_2),"mm"),
+            ResultItem("Zähnezahlverhältnis u", String.format("%.${NUMBER_PRECISION}f", resultu),"mm"),
             ResultItem("Achsabstand aus dm_1 und dm_2", String.format("%.${NUMBER_PRECISION}f", resulta),"mm")
         )
     }
