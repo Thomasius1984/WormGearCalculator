@@ -271,6 +271,7 @@ class WormGearCalculator : ViewModel() {
         val resultrf_1 = getrf_1(resultdf_1)
         val resulth_1 = geth_1(resulthfm_1, resultham_1)
 
+        // Allgemeines
         val resultc_1 = getc_1(a, resultda_1, resultdf_2)
         val resultc_2 = getc_2(a, resultda_2, resultdf_1)
         val resultu = getu(z2, z1)

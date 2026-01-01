@@ -39,7 +39,7 @@ fun InfoScreen(modifier: Modifier = Modifier) {
             rows = listOf(
                 FormulaRow(
                     "Mittensteigungswinkel γ (Grad)",
-                    "γ = arctan(Z₁ · m_x / dm₁)"
+                    "γ = arctan(Z₁ · mₓ / dm₁)"
                 ),
                 FormulaRow(
                     "Axialmodul",
@@ -47,7 +47,7 @@ fun InfoScreen(modifier: Modifier = Modifier) {
                 ),
                 FormulaRow(
                     "Profilverschiebungsfaktor",
-                    "x_f = (2a − dₘ₁ − mₓ·Z₂) / (2·mₓ)"
+                    "xf₂ = (2a − dₘ₁ − mₓ·Z₂) / (2·mₓ)"
                 ),
                 FormulaRow(
                     "Profilverschiebung",
@@ -89,15 +89,15 @@ fun InfoScreen(modifier: Modifier = Modifier) {
                 ),
                 FormulaRow(
                     "Fußhöhe Schnecke",
-                    "h_f₁ = mₓ · (hFf₁f + cf₁f)"
+                    "hf₁ = mₓ · (hFf₁f + cf₁f)"
                 ),
                 FormulaRow(
                     "Fußkreisdurchmesser",
-                    "d_f₁ = dm₁ − 2·hf₁"
+                    "df₁ = dm₁ − 2·hf₁"
                 ),
                 FormulaRow(
                     "Fußkreisradius",
-                    "r_f₁ = df₁ / 2"
+                    "rf₁ = df₁ / 2"
                 ),
                 FormulaRow(
                     "Zahnhöhe Schnecke",
@@ -115,7 +115,7 @@ fun InfoScreen(modifier: Modifier = Modifier) {
                 ),
                 FormulaRow(
                     "Profilverschiebung",
-                    "xₘ = x_f · mₓ"
+                    "xₘ = xf₂ · mₓ"
                 ),
                 FormulaRow(
                     "Mittenkreisdurchmesser",
@@ -153,7 +153,7 @@ fun InfoScreen(modifier: Modifier = Modifier) {
                 ),
                 FormulaRow(
                     "Kopfhöhenfaktor Schneckenrad (Näherung)",
-                    "hamf₂ ≈ (da₂f − dm₂) / (2·mₓ) - x_f"
+                    "hamf₂ ≈ (da₂f − dm₂) / (2·mₓ) - xf₂"
                 )
             )
         )
