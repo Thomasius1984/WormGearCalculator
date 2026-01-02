@@ -29,6 +29,7 @@ fun ResultsScreen(
     val hFf2f by calculator.hFf2f.collectAsState()
     val gammaDeg by calculator.gamma_degrees.collectAsState()
     val d_a2f by calculator.d_a2f.collectAsState()
+    val alf_nz by calculator.alf_nz.collectAsState()
 
     // =============================
     // Berechnung
@@ -45,8 +46,8 @@ fun ResultsScreen(
         hFf1f = hFf1f,
         hFf2f = hFf2f,
         gammaDeg = gammaDeg,
-        d_a2f = d_a2f
-    )
+        d_a2f = d_a2f,
+        alf_nz = alf_nz)
 
     // =============================
     // Gruppierung
@@ -67,7 +68,10 @@ fun ResultsScreen(
                 it.name.contains("Mittensteigungswinkel") ||
                 it.name.contains("Achsabstand") ||
                 it.name.contains("Zähnezahl") ||
-                it.name.contains("Kopfspiel")
+                it.name.contains("Kopfspiel") ||
+                it.name.contains("Normalzahndicke") ||
+                it.name.contains("Formzahl") ||
+                it.name.contains("Eingriffswinkel")
     }
 
     // =============================

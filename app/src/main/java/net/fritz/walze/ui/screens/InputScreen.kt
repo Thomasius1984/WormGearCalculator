@@ -47,7 +47,7 @@ fun InputScreen(
 
         SectionHeader("Grundparameter")
 
-        GreenInputField("Normalmodul m_n", m_n, calculator::setM_n, "")
+        GreenInputField("Normalmodul mₙ", m_n, calculator::setM_n, "")
         GreenInputField("Mittensteigungswinkel γ", gamma_degrees, calculator::setGamma_degrees, "°")
         GreenInputField("Gangzahl Schnecke Z₁", z1, calculator::setZ1, "")
         GreenInputField("Zähnezahl Rad Z₂", z2, calculator::setZ2, "")
@@ -56,42 +56,42 @@ fun InputScreen(
         Spacer(Modifier.height(16.dp))
         SectionHeader("Durchmesser & Winkel")
 
-        GreenInputField("Mittenkreisdurchmesser dm_1", d_m1, calculator::setD_m1, "mm")
+        GreenInputField("Mittenkreisdurchmesser dm₁", d_m1, calculator::setD_m1, "mm")
         GreenInputField("Normaleingriffswinkel αn_z", alf_nz, calculator::setAlf_nz, "°")
 
         Spacer(Modifier.height(16.dp))
         SectionHeader("Fuß- und Kopffaktoren")
 
         GreenInputField(
-            "hFf1f Fuß-Formhöhenfaktor Schnecke",
+            "hFf₁f Fuß-Formhöhenfaktor Schnecke",
             hFf1f,
             calculator::setHFf1f,
             ""
         )
 
         GreenInputField(
-            "hFf2f Fuß-Formhöhenfaktor Rad",
+            "hFf₂f Fuß-Formhöhenfaktor Rad",
             hFf2f,
             calculator::setHFf2f,
             ""
         )
 
         GreenInputField(
-            "cf1f Fuß-Freiheitsfaktor Schnecke",
+            "cf₁f Fuß-Freiheitsfaktor Schnecke",
             cf1f,
             calculator::setCf1f,
             ""
         )
 
         GreenInputField(
-            "cf2f Fuß-Freiheitsfaktor Rad",
+            "cf₂f Fuß-Freiheitsfaktor Rad",
             cf2f,
             calculator::setCf2f,
             ""
         )
 
         GreenInputField(
-            "Kopfkreisdurchmesser Schneckenrad da_2f (für ham_2f)",
+            "Kopfkreisdurchmesser Schneckenrad da₂ (für hamf₂)",
             d_a2f,
             calculator::setDA2f,
             "mm"

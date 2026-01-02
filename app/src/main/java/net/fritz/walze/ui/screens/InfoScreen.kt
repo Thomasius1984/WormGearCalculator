@@ -51,7 +51,7 @@ fun InfoScreen(modifier: Modifier = Modifier) {
                 ),
                 FormulaRow(
                     "Profilverschiebung",
-                    "xₘ = x_f · mₓ"
+                    "xₘ = xf₂ · mₓ"
                 ),
                 FormulaRow(
                     "Normale Teilung",
@@ -77,7 +77,7 @@ fun InfoScreen(modifier: Modifier = Modifier) {
             rows = listOf(
                 FormulaRow(
                     "Kopfhöhe Schnecke",
-                    "ha₁ = ham₁ · mₓ"
+                    "ha₁ = hamf₁ · mₓ"
                 ),
                 FormulaRow(
                     "Kopfkreisdurchmesser",
@@ -123,7 +123,7 @@ fun InfoScreen(modifier: Modifier = Modifier) {
                 ),
                 FormulaRow(
                     "Kopfhöhe Rad",
-                    "ha₂ = ham₂ · mₓ"
+                    "ha₂ = hamf₂ · mₓ"
                 ),
                 FormulaRow(
                     "Kopfkreisdurchmesser",

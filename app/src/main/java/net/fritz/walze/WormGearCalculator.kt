@@ -111,6 +111,22 @@ class WormGearCalculator : ViewModel() {
         return p_z/2/PI
     }
 
+    fun gets_mn(m_x: Double, gamma_Rad: Double): Double {
+        return (m_x * PI * cos(gamma_Rad)) / 2
+    }
+
+    fun getq(d_m1: Double, m_x: Double): Double {
+        return d_m1 / m_x
+    }
+
+    fun getalf_xr(alf_nz: Double, gamma_degrees: Double): Double {
+        return atan(tan(alf_nz * PI / 180) / cos(gamma_degrees * PI / 180))
+    }
+
+    fun getalf_x(alf_xr: Double): Double {
+        return alf_xr * 180 / PI
+    }
+
     // =============================
     // Schnecke
     // =============================
@@ -207,13 +223,15 @@ class WormGearCalculator : ViewModel() {
     // Validierung (wahrscheinlich müssen noch andere variablen auf 0 überprüft werden
     // =============================
 
-    private fun isValid(m_n: Double, z1: Double, z2: Double, a: Double, d_m1: Double, d_a2f: Double): Boolean {
+    private fun isValid(m_n: Double, z1: Double, z2: Double, a: Double, d_m1: Double, d_a2f: Double, alf_nz: Double): Boolean {
         return m_n > 0 &&
                 z1 > 0 &&
                 z2 > 0 &&
                 a > 0 &&
-                d_m1 > 0
-                d_a2f > 0
+                d_m1 > 0 &&
+                d_a2f > 0 &&
+                alf_nz > 0
+
     }
 
     /**
@@ -231,10 +249,12 @@ class WormGearCalculator : ViewModel() {
         hFf1f: Double,
         hFf2f: Double,
         gammaDeg: Double,
-        d_a2f: Double
+        d_a2f: Double,
+        alf_nz: Double
+
     ): List<ResultItem> {
         // Überprüfe Input Variable auf 0, wenn 0 dann keine Berechnungen
-        if (!isValid(m_n, z1, z2, a, d_m1, d_a2f)) {
+        if (!isValid(m_n, z1, z2, a, d_m1, d_a2f, alf_nz)) {
             return emptyList()
         }
         // Rufe alle get Funktionen zum berechnen auf und speichere Wert in eigener Variable
@@ -248,6 +268,10 @@ class WormGearCalculator : ViewModel() {
         val resultp_x = getp_x (resultm_x)
         val resultp_z = getp_z (resultp_x, z1)
         val resultp = getp (resultp_z)
+        val results_mn = gets_mn(resultm_x, resultgamma_Rad)
+        val resultsq = getq(d_m1, resultm_x)
+        val resultalf_xr = getalf_xr(alf_nz, gammaDeg)
+        val resultalf_x = getalf_x(resultalf_xr)
 
         // Berechne Rad
         val resultd_2 = getd_2(resultm_x,z2)
@@ -281,36 +305,39 @@ class WormGearCalculator : ViewModel() {
 
 
 
-        return listOf(ResultItem("Axialmodul m_x",String.format("%.${NUMBER_PRECISION}f", resultm_x), ""),
+        return listOf(ResultItem("Axialmodul mₓ",String.format("%.${NUMBER_PRECISION}f", resultm_x), "mm"),
             ResultItem("Mittensteigungswinkel in rad", String.format("%.${NUMBER_PRECISION}f", resultgamma_Rad), ""),
             ResultItem("Mittensteigungswinkel in Grad", String.format("%.${NUMBER_PRECISION}f", resultgamma_Grad), "°"),
-            ResultItem("Normalteilung p_n", String.format("%.${NUMBER_PRECISION}f", resultp_n), "mm"),
-            ResultItem("Axialteilung p_x", String.format("%.${NUMBER_PRECISION}f", resultp_x), "mm"),
+            ResultItem("Normalteilung pₙ", String.format("%.${NUMBER_PRECISION}f", resultp_n), "mm"),
+            ResultItem("Axialteilung pₓ", String.format("%.${NUMBER_PRECISION}f", resultp_x), "mm"),
             ResultItem("Schneckenganghöhe p_z", String.format("%.${NUMBER_PRECISION}f", resultp_z), "mm"),
             ResultItem("Schraubparameter p", String.format("%.${NUMBER_PRECISION}f", resultp), "mm"),
-            ResultItem("Kopfhöhenfaktor Schnecke ham_1f", String.format("%.${NUMBER_PRECISION}f", resultham_1f), ""),
-            ResultItem("Zahnkopfhöhe Schnecke ham_1", String.format("%.${NUMBER_PRECISION}f", resultham_1), "mm"),
-            ResultItem("Kopfkreisdurchmesser Schnecke da_1",String.format("%.${NUMBER_PRECISION}f", resultda_1),"mm"),
-            ResultItem("Kopfkreisradius Schnecke ra_1",String.format("%.${NUMBER_PRECISION}f", resultra_1),"mm"),
-            ResultItem("Zahnfußhöhe Schnecke hfm_1",String.format("%.${NUMBER_PRECISION}f", resulthfm_1),"mm"),
-            ResultItem("Fußkreisdurchmesser Schnecke df_1", String.format("%.${NUMBER_PRECISION}f", resultdf_1), "mm"),
-            ResultItem("Fußkreisradius Schnecke rf_1", String.format("%.${NUMBER_PRECISION}f", resultrf_1), "mm"),
-            ResultItem("Zahnhöhe Schnecke h_1", String.format("%.${NUMBER_PRECISION}f", resulth_1), "mm"),
-            ResultItem("Teilkreisdurchmesser Rad d_2", String.format("%.${NUMBER_PRECISION}f", resultd_2), "mm"),
-            ResultItem("Profilverschiebungsfaktor x_f",String.format("%.${NUMBER_PRECISION}f", resultx_f),""),
-            ResultItem("Profilverschiebung x_m",String.format("%.${NUMBER_PRECISION}f", resultx_m), "mm"),
-            ResultItem("Mittenkreisdurchmesser Rad dm_2",String.format("%.${NUMBER_PRECISION}f", resultdm_2), "mm"),
-            ResultItem("Kopfhöhenfaktor Rad ham_2f",String.format("%.${NUMBER_PRECISION}f", resultham_2f), ""),
-            ResultItem("Zahnkopfhöhe Rad ham_2",String.format("%.${NUMBER_PRECISION}f", resultham_2), "mm"),
-            ResultItem("Kopfkreisdurchmesser Rad da_2",String.format("%.${NUMBER_PRECISION}f", resultda_2), "mm"),
-            ResultItem("Zahnfußhöhe Rad hfm_2", String.format("%.${NUMBER_PRECISION}f", resulthfm_2),"mm"),
-            ResultItem("Fußkreisdurchmesser Rad df_2", String.format("%.${NUMBER_PRECISION}f", resultdf_2),"mm"),
-            ResultItem("Zahnhöhe Rad h_2", String.format("%.${NUMBER_PRECISION}f", resulth_2),"mm"),
-            ResultItem("Kopfspiel Schnecke c_1", String.format("%.${NUMBER_PRECISION}f", resultc_1),"mm"),
-            ResultItem("Kopfspiel Rad c_2", String.format("%.${NUMBER_PRECISION}f", resultc_2),"mm"),
+            ResultItem("Kopfhöhenfaktor Schnecke hamf₁", String.format("%.${NUMBER_PRECISION}f", resultham_1f), ""),
+            ResultItem("Zahnkopfhöhe Schnecke ha₁", String.format("%.${NUMBER_PRECISION}f", resultham_1), "mm"),
+            ResultItem("Kopfkreisdurchmesser Schnecke da₁",String.format("%.${NUMBER_PRECISION}f", resultda_1),"mm"),
+            ResultItem("Kopfkreisradius Schnecke ra₁",String.format("%.${NUMBER_PRECISION}f", resultra_1),"mm"),
+            ResultItem("Zahnfußhöhe Schnecke hf₁",String.format("%.${NUMBER_PRECISION}f", resulthfm_1),"mm"),
+            ResultItem("Fußkreisdurchmesser Schnecke df₁", String.format("%.${NUMBER_PRECISION}f", resultdf_1), "mm"),
+            ResultItem("Fußkreisradius Schnecke rf₁", String.format("%.${NUMBER_PRECISION}f", resultrf_1), "mm"),
+            ResultItem("Zahnhöhe Schnecke h₁", String.format("%.${NUMBER_PRECISION}f", resulth_1), "mm"),
+            ResultItem("Teilkreisdurchmesser Rad d₂", String.format("%.${NUMBER_PRECISION}f", resultd_2), "mm"),
+            ResultItem("Profilverschiebungsfaktor xf₂",String.format("%.${NUMBER_PRECISION}f", resultx_f),""),
+            ResultItem("Profilverschiebung xₘ",String.format("%.${NUMBER_PRECISION}f", resultx_m), "mm"),
+            ResultItem("Mittenkreisdurchmesser Rad dm₂",String.format("%.${NUMBER_PRECISION}f", resultdm_2), "mm"),
+            ResultItem("Kopfhöhenfaktor Rad hamf₂",String.format("%.${NUMBER_PRECISION}f", resultham_2f), ""),
+            ResultItem("Zahnkopfhöhe Rad ha₂",String.format("%.${NUMBER_PRECISION}f", resultham_2), "mm"),
+            ResultItem("Kopfkreisdurchmesser Rad da₂",String.format("%.${NUMBER_PRECISION}f", resultda_2), "mm"),
+            ResultItem("Zahnfußhöhe Rad hf₂", String.format("%.${NUMBER_PRECISION}f", resulthfm_2),"mm"),
+            ResultItem("Fußkreisdurchmesser Rad df₂", String.format("%.${NUMBER_PRECISION}f", resultdf_2),"mm"),
+            ResultItem("Zahnhöhe Rad h₂", String.format("%.${NUMBER_PRECISION}f", resulth_2),"mm"),
+            ResultItem("Kopfspiel Schnecke c₁", String.format("%.${NUMBER_PRECISION}f", resultc_1),"mm"),
+            ResultItem("Kopfspiel Rad c₂", String.format("%.${NUMBER_PRECISION}f", resultc_2),"mm"),
             ResultItem("Zähnezahlverhältnis u", String.format("%.${NUMBER_PRECISION}f", resultu),"mm"),
-            ResultItem("Achsabstand aus dm_1 und dm_2", String.format("%.${NUMBER_PRECISION}f", resulta),"mm")
-        )
+            ResultItem("Achsabstand aus dm₁ und dm₂", String.format("%.${NUMBER_PRECISION}f", resulta),"mm"),
+            ResultItem("Normalzahndicke sₘₙ", String.format("%.${NUMBER_PRECISION}f", results_mn),"mm"),
+            ResultItem("Formzahl q", String.format("%.${NUMBER_PRECISION}f", resultsq),"mm"),
+            ResultItem("Eingriffsrad αₓ", String.format("%.${NUMBER_PRECISION}f", resultalf_xr),""),
+            ResultItem("Eingriffswinkel αₓ", String.format("%.${NUMBER_PRECISION}f", resultalf_x), "°"))
     }
 
 }
