@@ -37,7 +37,8 @@ fun IntroScreen(onContinue: () -> Unit) {
             Spacer(Modifier.height(5.dp))
 
             Text(
-                text = "Berechnung Zylinderschnecken-Radsatz",
+                text = "Berechnung " +
+                        "Zylinderschnecken-Radsatz",
                 style = MaterialTheme.typography.headlineSmall,
                 color = Color(0xFFE53935)
             )
