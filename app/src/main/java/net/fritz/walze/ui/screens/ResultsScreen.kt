@@ -6,17 +6,18 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import net.fritz.walze.ResultItem
 import net.fritz.walze.WormGearCalculator
+import net.fritz.walze.print.ResultsPrintHelper
 
 @Composable
 fun ResultsScreen(
     calculator: WormGearCalculator
 ) {
-    // =============================
-    // Inputs aus ViewModel
-    // =============================
+    val context = LocalContext.current
 
     val m_n by calculator.m_n.collectAsState()
     val z1 by calculator.z1.collectAsState()
@@ -31,52 +32,22 @@ fun ResultsScreen(
     val d_a2f by calculator.d_a2f.collectAsState()
     val alf_nz by calculator.alf_nz.collectAsState()
 
-    // =============================
-    // Berechnung
-    // =============================
-
     val results = calculator.calculateResults(
-        m_n = m_n,
-        z1 = z1,
-        z2 = z2,
-        a = a,
-        d_m1 = d_m1,
-        cf1f = cf1f,
-        cf2f = cf2f,
-        hFf1f = hFf1f,
-        hFf2f = hFf2f,
-        gammaDeg = gammaDeg,
-        d_a2f = d_a2f,
-        alf_nz = alf_nz)
-
-    // =============================
-    // Gruppierung
-    // =============================
-
-    val schneckenwelle = results.filter {
-        it.name.contains("Schnecke")
-    }
-
-    val schneckenrad = results.filter {
-        it.name.contains("Rad")
-    }
+        m_n, z1, z2, a, d_m1,
+        cf1f, cf2f, hFf1f, hFf2f,
+        gammaDeg, d_a2f, alf_nz
+    )
 
     val allgemein = results.filter {
-        it.name.contains("Axialmodul") ||
-                it.name.contains("Teilung") ||
-                it.name.contains("Schraubparameter") ||
-                it.name.contains("Mittensteigungswinkel") ||
+        it.name.contains("Axial") ||
+                it.name.contains("Teil") ||
+                it.name.contains("Mitten") ||
                 it.name.contains("Achsabstand") ||
-                it.name.contains("Zähnezahl") ||
-                it.name.contains("Kopfspiel") ||
-                it.name.contains("Normalzahndicke") ||
-                it.name.contains("Formzahl") ||
-                it.name.contains("Eingriffswinkel")
+                it.name.contains("Zähnezahl")
     }
 
-    // =============================
-    // UI
-    // =============================
+    val schneckenwelle = results.filter { it.name.contains("Schnecke") }
+    val schneckenrad = results.filter { it.name.contains("Rad") }
 
     Column(
         modifier = Modifier
@@ -84,81 +55,59 @@ fun ResultsScreen(
             .padding(8.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        FormulaSection(
-            title = "Schneckenwelle",
-            rows = schneckenwelle
-        )
 
-        FormulaSection(
-            title = "Schneckenrad",
-            rows = schneckenrad
-        )
+        Button(
+            onClick = {
+                ResultsPrintHelper.print(context, results)
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("PDF / Druckansicht")
+        }
 
-        FormulaSection(
-            title = "Allgemein",
-            rows = allgemein
-        )
+        Spacer(Modifier.height(12.dp))
+
+        FormulaSection("Allgemein", allgemein)
+        FormulaSection("Schneckenwelle", schneckenwelle)
+        FormulaSection("Schneckenrad", schneckenrad)
     }
 }
 
-// =======================================================
-// SECTION (umrandeter Bereich)
-// =======================================================
-
 @Composable
-fun FormulaSection(
-    title: String,
-    rows: List<ResultItem>
-) {
+fun FormulaSection(title: String, rows: List<ResultItem>) {
     if (rows.isEmpty()) return
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(12.dp)
-        ) {
+        Column(Modifier.padding(12.dp)) {
+
             Text(
                 text = title,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleMedium
             )
 
+            Divider(Modifier.padding(vertical = 8.dp))
 
-            Divider(
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
-
-            rows.forEach { item ->
-                FormulaRow(item)
+            rows.forEach {
+                FormulaRow(it)
             }
         }
     }
 }
 
-// =======================================================
-// EINZELNE ZEILE
-// =======================================================
-
 @Composable
 fun FormulaRow(item: ResultItem) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
+        modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = item.name,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1f)
-        )
-
-        Text(
-            text = "${item.value} ${item.unit}",
-            style = MaterialTheme.typography.bodyMedium
-        )
+        Text(item.name, modifier = Modifier.weight(1f))
+        Text("${item.value} ${item.unit}")
     }
 }

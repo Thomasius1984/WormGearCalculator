@@ -35,7 +35,7 @@ fun InfoScreen(modifier: Modifier = Modifier) {
         )
 
         FormulaSection(
-            title = "Grundlagen",
+            title = "Allgemein",
             rows = listOf(
                 FormulaRow(
                     "Mittensteigungswinkel γ (Grad)",
@@ -66,8 +66,12 @@ fun InfoScreen(modifier: Modifier = Modifier) {
                     "p_z = pₓ · Z₁"
                 ),
                 FormulaRow(
-                    "Normaleingriffswinkel (rad)",
-                    "αₙ = αₙ(z) · π / 180"
+                    "Eingriffswinkel",
+                    "αₓ = arctan(tan(αₙ) / cos (γ)"
+                ),
+                FormulaRow(
+                    "Achsabstand",
+                    "a = (dm₁ + dm₂) / 2"
                 )
             )
         )
@@ -102,6 +106,10 @@ fun InfoScreen(modifier: Modifier = Modifier) {
                 FormulaRow(
                     "Zahnhöhe Schnecke",
                     "h₁ = ha₁ + hf₁"
+                ),
+                FormulaRow(
+                    "Kopfspiel",
+                    "c₁ = a − 0,5·(da₁ + df₂)"
                 )
             )
         )
@@ -140,6 +148,10 @@ fun InfoScreen(modifier: Modifier = Modifier) {
                 FormulaRow(
                     "Zahnhöhe Rad",
                     "h₂ = ha₂ + hf₂"
+                ),
+                FormulaRow(
+                    "Kopfspiel",
+                    "c₂ = a − 0,5·(da₂ + df₁)"
                 )
             )
         )
@@ -154,16 +166,6 @@ fun InfoScreen(modifier: Modifier = Modifier) {
                 FormulaRow(
                     "Kopfhöhenfaktor Schneckenrad (Näherung)",
                     "hamf₂ ≈ (da₂f − dm₂) / (2·mₓ) - xf₂"
-                )
-            )
-        )
-
-        FormulaSection(
-            title = "Achsabstand",
-            rows = listOf(
-                FormulaRow(
-                    "Achsabstand",
-                    "a = (dm₁ + dm₂) / 2"
                 )
             )
         )
