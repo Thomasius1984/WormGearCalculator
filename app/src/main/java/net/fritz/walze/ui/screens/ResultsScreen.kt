@@ -40,8 +40,12 @@ fun ResultsScreen(
 
     val allgemein = results.filter {
         it.name.contains("Axial") ||
-                it.name.contains("Teil") ||
-                it.name.contains("Mitten") ||
+                it.name.contains("Teilung") ||
+                it.name.contains("Schraub") ||
+                it.name.contains("Normal") ||
+                it.name.contains("Mittenkreisdurchmesser Rad") ||
+                it.name.contains("Mittenkreisdurchmesser Schnecke") ||
+                it.name.contains("Eingriffswinkel") ||
                 it.name.contains("Achsabstand") ||
                 it.name.contains("Zähnezahl")
     }

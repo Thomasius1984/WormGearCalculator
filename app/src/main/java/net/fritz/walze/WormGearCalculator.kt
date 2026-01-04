@@ -140,7 +140,11 @@ class WormGearCalculator : ViewModel() {
     }
 
     fun getda_1(d_m1: Double, ham_1: Double): Double {
-        return d_m1 + 2.0 * ham_1
+        return d_m1 + 2 * ham_1
+    }
+
+    fun getdm_1(m_n: Double, z1: Double, gammaDeg: Double): Double {
+        return (m_n * z1) / sin(gammaDeg*PI/180)
     }
 
     fun getra_1(da_1: Double): Double {
@@ -288,6 +292,7 @@ class WormGearCalculator : ViewModel() {
         // Berechnung Schnecke
         val resultham_1f = getham_1f (gammaDeg)
         val resultham_1 = getham_1(resultham_1f, resultm_x)
+        val resultdm_1 = getdm_1(m_n, z1, gammaDeg)
         val resultda_1 = getda_1(d_m1, resultham_1)
         val resultra_1 = getra_1(resultda_1)
         val resulthfm_1 = gethfm_1(resultm_x, hFf1f, cf1f)
@@ -312,6 +317,7 @@ class WormGearCalculator : ViewModel() {
             ResultItem("Axialteilung pₓ", String.format("%.${NUMBER_PRECISION}f", resultp_x), "mm"),
             ResultItem("Schneckenganghöhe p_z", String.format("%.${NUMBER_PRECISION}f", resultp_z), "mm"),
             ResultItem("Schraubparameter p", String.format("%.${NUMBER_PRECISION}f", resultp), "mm"),
+            ResultItem("Mittenkreisdurchmesser Schnecke dm₁", String.format("%.${NUMBER_PRECISION}f", resultdm_1), "mm"),
             ResultItem("Kopfhöhenfaktor Schnecke hamf₁", String.format("%.${NUMBER_PRECISION}f", resultham_1f), ""),
             ResultItem("Zahnkopfhöhe Schnecke ha₁", String.format("%.${NUMBER_PRECISION}f", resultham_1), "mm"),
             ResultItem("Kopfkreisdurchmesser Schnecke da₁",String.format("%.${NUMBER_PRECISION}f", resultda_1),"mm"),

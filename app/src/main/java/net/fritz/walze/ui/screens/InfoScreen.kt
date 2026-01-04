@@ -46,10 +46,6 @@ fun InfoScreen(modifier: Modifier = Modifier) {
                     "mₓ = mₙ / cos(γ)"
                 ),
                 FormulaRow(
-                    "Profilverschiebungsfaktor",
-                    "xf₂ = (2a − dₘ₁ − mₓ·Z₂) / (2·mₓ)"
-                ),
-                FormulaRow(
                     "Profilverschiebung",
                     "xₘ = xf₂ · mₓ"
                 ),
@@ -120,6 +116,10 @@ fun InfoScreen(modifier: Modifier = Modifier) {
                 FormulaRow(
                     "Teilkreisdurchmesser",
                     "d₂ = Z₂ · mₓ"
+                ),
+                FormulaRow(
+                    "Profilverschiebungsfaktor",
+                    "xf₂ = (2a − dₘ₁ − mₓ·Z₂) / (2·mₓ)"
                 ),
                 FormulaRow(
                     "Profilverschiebung",
