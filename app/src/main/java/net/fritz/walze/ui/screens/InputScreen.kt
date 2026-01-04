@@ -1,5 +1,6 @@
 package net.fritz.walze.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,8 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import net.fritz.walze.WormGearCalculator
+
 @Composable
 fun InputScreen(
     calculator: WormGearCalculator,
@@ -25,7 +28,6 @@ fun InputScreen(
     val d_m1 by calculator.d_m1.collectAsState()
     val alf_nz by calculator.alf_nz.collectAsState()
 
-    // neue Faktoren
     val hFf1f by calculator.hFf1f.collectAsState()
     val hFf2f by calculator.hFf2f.collectAsState()
     val cf1f by calculator.cf1f.collectAsState()
@@ -35,14 +37,19 @@ fun InputScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .background(Color(0xFF1A1112))
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
 
         Text(
             text = "Schneckengetriebe – Eingaben",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 20.dp),
+            textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(bottom = 16.dp)
+            color = Color(0xFFE53935)
         )
 
         SectionHeader("Grundparameter")
@@ -57,49 +64,21 @@ fun InputScreen(
         SectionHeader("Durchmesser & Winkel")
 
         GreenInputField("Mittenkreisdurchmesser dm₁", d_m1, calculator::setD_m1, "mm")
-        GreenInputField("Normaleingriffswinkel αn_z", alf_nz, calculator::setAlf_nz, "°")
+        GreenInputField("Normaleingriffswinkel αₙz", alf_nz, calculator::setAlf_nz, "°")
 
         Spacer(Modifier.height(16.dp))
         SectionHeader("Fuß- und Kopffaktoren")
 
-        GreenInputField(
-            "hFf₁f Fuß-Formhöhenfaktor Schnecke",
-            hFf1f,
-            calculator::setHFf1f,
-            ""
-        )
-
-        GreenInputField(
-            "hFf₂f Fuß-Formhöhenfaktor Rad",
-            hFf2f,
-            calculator::setHFf2f,
-            ""
-        )
-
-        GreenInputField(
-            "cf₁f Fuß-Freiheitsfaktor Schnecke",
-            cf1f,
-            calculator::setCf1f,
-            ""
-        )
-
-        GreenInputField(
-            "cf₂f Fuß-Freiheitsfaktor Rad",
-            cf2f,
-            calculator::setCf2f,
-            ""
-        )
-
-        GreenInputField(
-            "Kopfkreisdurchmesser Schneckenrad da₂ (für hamf₂)",
-            d_a2f,
-            calculator::setDA2f,
-            "mm"
-        )
+        GreenInputField("hFf₁f Fußform Schnecke", hFf1f, calculator::setHFf1f, "")
+        GreenInputField("hFf₂f Fußform Rad", hFf2f, calculator::setHFf2f, "")
+        GreenInputField("cf₁f Fußfreiheit Schnecke", cf1f, calculator::setCf1f, "")
+        GreenInputField("cf₂f Fußfreiheit Rad", cf2f, calculator::setCf2f, "")
+        GreenInputField("Kopfkreisdurchmesser Rad da₂", d_a2f, calculator::setDA2f, "mm")
 
         Spacer(Modifier.height(32.dp))
     }
 }
+
 @Composable
 fun GreenInputField(
     label: String,
@@ -108,10 +87,10 @@ fun GreenInputField(
     unit: String,
     modifier: Modifier = Modifier
 ) {
+    val displayUnit = unit.ifEmpty { "dim" }
+
     var textValue by remember(value) {
-        mutableStateOf(
-            if (value == 0.0) "" else value.toString().replace('.', ',')
-        )
+        mutableStateOf(if (value == 0.0) "" else value.toString().replace('.', ','))
     }
 
     Row(
@@ -124,24 +103,19 @@ fun GreenInputField(
         Text(
             text = label,
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color.White
         )
-
-        Spacer(Modifier.width(8.dp))
 
         TextField(
             value = textValue,
-            onValueChange = { newValue: String ->
+            onValueChange = { newValue ->
                 textValue = newValue
-                newValue
-                    .replace(',', '.')
-                    .toDoubleOrNull()
-                    ?.let(onValueChange)
+                newValue.replace(',', '.').toDoubleOrNull()?.let(onValueChange)
             },
             modifier = Modifier
                 .width(110.dp)
-                .height(44.dp)
-                .padding(horizontal = 4.dp),   // ✅ Ersatz für contentPadding
+                .height(44.dp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             singleLine = true,
             textStyle = MaterialTheme.typography.bodySmall,
@@ -154,19 +128,25 @@ fun GreenInputField(
             )
         )
 
-        if (unit.isNotEmpty()) {
-            Spacer(Modifier.width(8.dp))
-            Text(unit, style = MaterialTheme.typography.labelSmall)
-        }
+        Spacer(Modifier.width(8.dp))
+
+        Text(
+            text = displayUnit,
+            modifier = Modifier.width(32.dp),
+            textAlign = TextAlign.Start,
+            style = MaterialTheme.typography.labelSmall,
+            color = Color.LightGray
+        )
     }
 }
+
 @Composable
-fun SectionHeader(title: String, modifier: Modifier = Modifier) {
+fun SectionHeader(title: String) {
     Text(
         text = title,
         style = MaterialTheme.typography.titleSmall,
-        color = MaterialTheme.colorScheme.primary,
-        modifier = modifier.padding(vertical = 12.dp)
+        color = Color(0xFFE53935),
+        modifier = Modifier.padding(vertical = 12.dp)
     )
-    Divider()
+    Divider(color = Color.DarkGray)
 }

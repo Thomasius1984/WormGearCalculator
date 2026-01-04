@@ -1,11 +1,13 @@
 package net.fritz.walze.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -39,15 +41,15 @@ fun ResultsScreen(
     )
 
     val allgemein = results.filter {
-        it.name.contains("Axial") ||
-                it.name.contains("Teilung") ||
+        it.name.contains("Axialmodul") ||
+                it.name.contains("Axialteilung") ||
                 it.name.contains("Schraub") ||
-                it.name.contains("Normal") ||
+                it.name.contains("Normalteilung") ||
                 it.name.contains("Mittenkreisdurchmesser Rad") ||
                 it.name.contains("Mittenkreisdurchmesser Schnecke") ||
-                it.name.contains("Eingriffswinkel") ||
                 it.name.contains("Achsabstand") ||
-                it.name.contains("Zähnezahl")
+                it.name.contains("Eingriffswinkel") ||
+                it.name.contains("Zähnezahlverhältnis")
     }
 
     val schneckenwelle = results.filter { it.name.contains("Schnecke") }
@@ -56,15 +58,18 @@ fun ResultsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color(0xFF1A1112))
             .padding(8.dp)
             .verticalScroll(rememberScrollState())
     ) {
 
         Button(
-            onClick = {
-                ResultsPrintHelper.print(context, results)
-            },
-            modifier = Modifier.fillMaxWidth()
+            onClick = { ResultsPrintHelper.print(context, results) },
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFE53935),
+                contentColor = Color.White
+            )
         ) {
             Text("PDF / Druckansicht")
         }
@@ -78,14 +83,20 @@ fun ResultsScreen(
 }
 
 @Composable
-fun FormulaSection(title: String, rows: List<ResultItem>) {
+fun FormulaSection(
+    title: String,
+    rows: List<ResultItem>
+) {
     if (rows.isEmpty()) return
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+        elevation = CardDefaults.cardElevation(4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF24191A)
+        )
     ) {
         Column(Modifier.padding(12.dp)) {
 
@@ -93,10 +104,14 @@ fun FormulaSection(title: String, rows: List<ResultItem>) {
                 text = title,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                color = Color(0xFFE53935)
             )
 
-            Divider(Modifier.padding(vertical = 8.dp))
+            Divider(
+                modifier = Modifier.padding(vertical = 8.dp),
+                color = Color.DarkGray
+            )
 
             rows.forEach {
                 FormulaRow(it)
@@ -108,10 +123,22 @@ fun FormulaSection(title: String, rows: List<ResultItem>) {
 @Composable
 fun FormulaRow(item: ResultItem) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 3.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(item.name, modifier = Modifier.weight(1f))
-        Text("${item.value} ${item.unit}")
+        Text(
+            text = item.name,
+            modifier = Modifier.weight(1f),
+            color = Color.White,
+            style = MaterialTheme.typography.bodyMedium
+        )
+
+        Text(
+            text = "${item.value} ${item.unit}",
+            color = Color.LightGray,
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }
