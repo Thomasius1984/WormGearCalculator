@@ -42,6 +42,7 @@ fun ResultsScreen(
 
     val allgemein = results.filter {
         it.name.contains("Axialmodul") ||
+                it.name.contains("Mittensteigungswinkel in Grad") ||
                 it.name.contains("Axialteilung") ||
                 it.name.contains("Schraub") ||
                 it.name.contains("Normalteilung") ||

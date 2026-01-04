@@ -2,8 +2,8 @@ package net.fritz.walze.print
 
 import android.graphics.*
 import android.graphics.pdf.PdfDocument
-import android.print.PrintDocumentAdapter
 import android.print.PrintAttributes
+import android.print.PrintDocumentAdapter
 import android.print.PrintDocumentInfo
 import net.fritz.walze.ResultItem
 import java.io.FileOutputStream
@@ -24,9 +24,11 @@ class ResultsPrintAdapter(
         extras: android.os.Bundle?
     ) {
         pdfDocument = PdfDocument()
+
         callback.onLayoutFinished(
             PrintDocumentInfo.Builder("Fertigungswerte.pdf")
                 .setContentType(PrintDocumentInfo.CONTENT_TYPE_DOCUMENT)
+                .setPageCount(1)
                 .build(),
             true
         )
@@ -53,33 +55,128 @@ class ResultsPrintAdapter(
         callback.onWriteFinished(arrayOf(android.print.PageRange.ALL_PAGES))
     }
 
+    // =====================================================
+    // ZEICHNEN
+    // =====================================================
+
     private fun drawPage(canvas: Canvas) {
-        val paint = Paint()
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
         paint.color = Color.BLACK
 
-        var y = 60
+        val leftMargin = 40f
+        val rightMargin = 555f
+        var y = 60f
 
+        // ===== Titel =====
         paint.textSize = 18f
         paint.textAlign = Paint.Align.CENTER
-        canvas.drawText("Fertigungswerte", 300f, y.toFloat(), paint)
+        paint.typeface = Typeface.DEFAULT_BOLD
+        canvas.drawText("Fertigungswerte", 297.5f, y, paint)
 
-        y += 25
+        // ===== Datum (oben rechts, gleiche Höhe) =====
         paint.textSize = 10f
+        paint.textAlign = Paint.Align.RIGHT
+        paint.typeface = Typeface.DEFAULT
         val date = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Date())
-        canvas.drawText(date, 300f, y.toFloat(), paint)
+        canvas.drawText(date, rightMargin, y, paint)
 
-        y += 30
+        y += 40f
+
+        // ===== Tabellenkopf =====
         paint.textAlign = Paint.Align.LEFT
         paint.textSize = 11f
+        paint.typeface = Typeface.DEFAULT_BOLD
 
-        results.forEach {
+        canvas.drawText("Ergebnis", leftMargin, y, paint)
+        canvas.drawText("Fertigung", 380f, y, paint)
+
+        y += 8f
+        canvas.drawLine(leftMargin, y, rightMargin, y, paint)
+        y += 18f
+
+        paint.typeface = Typeface.DEFAULT
+
+        // ===== Gruppen =====
+        y = drawSection(canvas, "Allgemein", y) { it.isAllgemein() }
+        y = drawSection(canvas, "Schneckenwelle", y) { it.name.contains("Schnecke") }
+        y = drawSection(canvas, "Schneckenrad", y) { it.name.contains("Rad") }
+
+        // ===== Unterschrift =====
+        y = 760f
+        canvas.drawLine(300f, y, rightMargin, y, paint)
+        y += 14f
+        paint.textSize = 10f
+        canvas.drawText("Unterschrift / Fertigung", 300f, y, paint)
+    }
+
+    // =====================================================
+    // SECTION
+    // =====================================================
+
+    private fun drawSection(
+        canvas: Canvas,
+        title: String,
+        startY: Float,
+        filter: (ResultItem) -> Boolean
+    ): Float {
+
+        var y = startY
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        paint.color = Color.BLACK
+
+        val sectionItems = results.filter(filter)
+        if (sectionItems.isEmpty()) return y
+
+        // Überschrift
+        paint.textSize = 12f
+        paint.typeface = Typeface.DEFAULT_BOLD
+        canvas.drawText(title, 40f, y, paint)
+
+        y += 10f
+        canvas.drawLine(40f, y, 555f, y, paint)
+        y += 16f
+
+        paint.textSize = 11f
+        paint.typeface = Typeface.DEFAULT
+
+        sectionItems.forEach {
             canvas.drawText(
                 "${it.name}: ${it.value} ${it.unit}",
                 40f,
-                y.toFloat(),
+                y,
                 paint
             )
-            y += 16
+
+            canvas.drawRect(
+                370f,
+                y - 12f,
+                555f,
+                y + 4f,
+                Paint().apply {
+                    style = Paint.Style.STROKE
+                    strokeWidth = 1f
+                }
+            )
+
+            y += 18f
         }
+
+        y += 10f
+        return y
+    }
+
+    // =====================================================
+    // KATEGORIE-HELPER
+    // =====================================================
+
+    private fun ResultItem.isAllgemein(): Boolean {
+        return name.contains("Axial") ||
+                name.contains("Normal") ||
+                name.contains("Mittensteigungswinkel in Grad") ||
+                name.contains("Mittenkreisdurchmesser") ||
+                name.contains("Achsabstand") ||
+                name.contains("Eingriffswinkel") ||
+                name.contains("Zähnezahl") ||
+                name.contains("Schraub")
     }
 }

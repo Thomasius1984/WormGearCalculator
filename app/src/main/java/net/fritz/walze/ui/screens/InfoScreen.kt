@@ -73,6 +73,20 @@ fun InfoScreen(modifier: Modifier = Modifier) {
         )
 
         FormulaSection(
+            title = "Faktoren & Näherungen",
+            rows = listOf(
+                FormulaRow(
+                    "Kopfhöhenfaktor Schnecke",
+                    "hamf₁ = cos(γ)"
+                ),
+                FormulaRow(
+                    "Kopfhöhenfaktor Schneckenrad (Näherung)",
+                    "hamf₂ ≈ (da₂f − dm₂) / (2·mₓ) - xf₂"
+                )
+            )
+        )
+
+        FormulaSection(
             title = "Schnecke",
             rows = listOf(
                 FormulaRow(
@@ -156,19 +170,6 @@ fun InfoScreen(modifier: Modifier = Modifier) {
             )
         )
 
-        FormulaSection(
-            title = "Faktoren & Näherungen",
-            rows = listOf(
-                FormulaRow(
-                    "Kopfhöhenfaktor Schnecke",
-                    "hamf₁ = cos(γ)"
-                ),
-                FormulaRow(
-                    "Kopfhöhenfaktor Schneckenrad (Näherung)",
-                    "hamf₂ ≈ (da₂f − dm₂) / (2·mₓ) - xf₂"
-                )
-            )
-        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
