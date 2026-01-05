@@ -65,24 +65,53 @@ class ResultsPrintAdapter(
 
         val leftMargin = 40f
         val rightMargin = 555f
-        var y = 60f
+        val centerX = 297.5f
+        var y = 50f
 
-        // ===== Titel =====
-        paint.textSize = 18f
-        paint.textAlign = Paint.Align.CENTER
+        // =================================================
+        // KOPFZEILE: TITEL | UNTERSCHRIFT | DATUM/UHRZEIT
+        // =================================================
+
+        // Titel links
+        paint.textSize = 14f
         paint.typeface = Typeface.DEFAULT_BOLD
-        canvas.drawText("Fertigungswerte", 297.5f, y, paint)
+        paint.textAlign = Paint.Align.LEFT
+        canvas.drawText("Fertigungswerte", leftMargin, y, paint)
 
-        // ===== Datum (oben rechts, gleiche Höhe) =====
-        paint.textSize = 10f
-        paint.textAlign = Paint.Align.RIGHT
+        // Unterschriftenlinie mittig
+        val signLineWidth = 140f
+        canvas.drawLine(
+            centerX - signLineWidth / 2,
+            y,
+            centerX + signLineWidth / 2,
+            y,
+            paint
+        )
+
+        paint.textSize = 9f
         paint.typeface = Typeface.DEFAULT
-        val date = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Date())
-        canvas.drawText(date, rightMargin, y, paint)
+        paint.textAlign = Paint.Align.CENTER
+        canvas.drawText("Unterschrift / Fertigung", centerX, y + 12f, paint)
 
-        y += 40f
+        // Datum + Uhrzeit rechts
+        paint.textAlign = Paint.Align.RIGHT
+        paint.textSize = 10f
 
-        // ===== Tabellenkopf =====
+        val dateTime = SimpleDateFormat(
+            "dd.MM.yyyy HH:mm",
+            Locale.getDefault()
+        ).format(Date())
+
+        canvas.drawText(dateTime, rightMargin, y, paint)
+
+        // Trennlinie
+        y += 22f
+        canvas.drawLine(leftMargin, y, rightMargin, y, paint)
+        y += 20f
+
+        // =================================================
+        // SPALTENÜBERSCHRIFT
+        // =================================================
         paint.textAlign = Paint.Align.LEFT
         paint.textSize = 11f
         paint.typeface = Typeface.DEFAULT_BOLD
@@ -96,17 +125,12 @@ class ResultsPrintAdapter(
 
         paint.typeface = Typeface.DEFAULT
 
-        // ===== Gruppen =====
+        // =================================================
+        // GRUPPEN
+        // =================================================
         y = drawSection(canvas, "Allgemein", y) { it.isAllgemein() }
         y = drawSection(canvas, "Schneckenwelle", y) { it.name.contains("Schnecke") }
         y = drawSection(canvas, "Schneckenrad", y) { it.name.contains("Rad") }
-
-        // ===== Unterschrift =====
-        y = 760f
-        canvas.drawLine(300f, y, rightMargin, y, paint)
-        y += 14f
-        paint.textSize = 10f
-        canvas.drawText("Unterschrift / Fertigung", 300f, y, paint)
     }
 
     // =====================================================
@@ -127,7 +151,6 @@ class ResultsPrintAdapter(
         val sectionItems = results.filter(filter)
         if (sectionItems.isEmpty()) return y
 
-        // Überschrift
         paint.textSize = 12f
         paint.typeface = Typeface.DEFAULT_BOLD
         canvas.drawText(title, 40f, y, paint)
@@ -172,7 +195,7 @@ class ResultsPrintAdapter(
     private fun ResultItem.isAllgemein(): Boolean {
         return name.contains("Axial") ||
                 name.contains("Normal") ||
-                name.contains("Mittensteigungswinkel in Grad") ||
+                name.contains("Mittensteigungswinkel") ||
                 name.contains("Mittenkreisdurchmesser") ||
                 name.contains("Achsabstand") ||
                 name.contains("Eingriffswinkel") ||
@@ -180,3 +203,4 @@ class ResultsPrintAdapter(
                 name.contains("Schraub")
     }
 }
+
