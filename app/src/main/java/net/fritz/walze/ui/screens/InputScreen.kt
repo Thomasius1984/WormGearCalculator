@@ -10,10 +10,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import net.fritz.walze.WormGearCalculator
+import java.util.Locale
 
 @Composable
 fun InputScreen(
@@ -58,12 +61,15 @@ fun InputScreen(
         GreenInputField("Mittenkreisdurchmesser Schnecke dm₁", d_m1, calculator::setD_m1, "mm")
         GreenInputField("Mittensteigungswinkel γ", gamma_degrees, calculator::setGamma_degrees, "°")
         GreenInputField("Kopfkreisdurchmesser Rad da₂", d_a2f, calculator::setDA2f, "mm")
-        GreenInputField("Gangzahl Schnecke Z₁", z1, calculator::setZ1, "")
-        GreenInputField("Zähnezahl Rad Z₂", z2, calculator::setZ2, "")
+
+        GreenInputField("Gangzahl Schnecke Z₁", z1, calculator::setZ1, "", isInteger = true)
+        GreenInputField("Zähnezahl Rad Z₂", z2, calculator::setZ2, "", isInteger = true)
+
         GreenInputField("Achsabstand a", a, calculator::setA, "mm")
 
         Spacer(Modifier.height(16.dp))
         SectionHeader("Winkel")
+
         GreenInputField("Normaleingriffswinkel αₙz", alf_nz, calculator::setAlf_nz, "°")
 
         Spacer(Modifier.height(16.dp))
@@ -84,12 +90,24 @@ fun GreenInputField(
     value: Double,
     onValueChange: (Double) -> Unit,
     unit: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isInteger: Boolean = false
 ) {
     val displayUnit = unit.ifEmpty { "dim" }
+    var text by remember { mutableStateOf("") }
+    var hasFocus by remember { mutableStateOf(false) }
 
-    var textValue by remember(value) {
-        mutableStateOf(if (value == 0.0) "" else value.toString().replace('.', ','))
+    // Initial- / externes Update
+    LaunchedEffect(value) {
+        if (!hasFocus) {
+            text = if (value == 0.0) "" else {
+                if (isInteger) {
+                    value.toInt().toString()
+                } else {
+                    String.format(Locale.GERMANY, "%.4f", value)
+                }
+            }
+        }
     }
 
     Row(
@@ -107,22 +125,34 @@ fun GreenInputField(
         )
 
         TextField(
-            value = textValue,
-            onValueChange = { newValue ->
-                textValue = newValue
-                newValue.replace(',', '.').toDoubleOrNull()?.let(onValueChange)
+            value = text,
+            onValueChange = { input ->
+                val filtered = input
+                    .replace('.', ',')
+                    .filterIndexed { index, c ->
+                        c.isDigit() || (c == ',' && input.indexOf(',') == index)
+                    }
+
+                text = filtered
+
+                filtered.replace(',', '.').toDoubleOrNull()?.let {
+                    onValueChange(it)
+                }
             },
             modifier = Modifier
-                .width(110.dp)
-                .height(44.dp),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                .width(120.dp)
+                .height(48.dp),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = if (isInteger) KeyboardType.Number else KeyboardType.Decimal
+            ),
             singleLine = true,
-            textStyle = MaterialTheme.typography.bodySmall,
+            textStyle = TextStyle(
+                fontSize = 16.sp,
+                color = Color.Black
+            ),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color(0xFFDFF5E3),
                 unfocusedContainerColor = Color(0xFFDFF5E3),
-                focusedTextColor = Color.Black,
-                unfocusedTextColor = Color.Black,
                 cursorColor = Color.Black
             )
         )
@@ -132,7 +162,6 @@ fun GreenInputField(
         Text(
             text = displayUnit,
             modifier = Modifier.width(32.dp),
-            textAlign = TextAlign.Start,
             style = MaterialTheme.typography.labelSmall,
             color = Color.LightGray
         )

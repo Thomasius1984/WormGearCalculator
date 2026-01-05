@@ -50,6 +50,7 @@ fun ResultsScreen(
                 it.name.contains("Mittenkreisdurchmesser Schnecke") ||
                 it.name.contains("Achsabstand") ||
                 it.name.contains("Eingriffswinkel") ||
+                it.name.contains("Formzahl q") ||
                 it.name.contains("Zähnezahlverhältnis")
     }
 
