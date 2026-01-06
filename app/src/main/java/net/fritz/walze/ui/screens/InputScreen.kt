@@ -73,7 +73,7 @@ fun InputScreen(
         GreenInputField("Normaleingriffswinkel αₙz", alf_nz, calculator::setAlf_nz, "°")
 
         Spacer(Modifier.height(16.dp))
-        SectionHeader("Fuß- und Kopffaktoren")
+        SectionHeader("Fußfaktoren")
 
         GreenInputField("hFf₁f Fußformfaktor Schnecke", hFf1f, calculator::setHFf1f, "")
         GreenInputField("hFf₂f Fußformfaktor Rad", hFf2f, calculator::setHFf2f, "")

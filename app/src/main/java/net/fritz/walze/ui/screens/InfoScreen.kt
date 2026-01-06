@@ -5,9 +5,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
+import androidx.compose.ui.Alignment
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import coil.compose.AsyncImage
+import net.fritz.walze.R
+import coil.decode.GifDecoder
+import coil.request.ImageRequest
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -46,7 +52,6 @@ fun InfoScreen() {
             rows = listOf(
                 FormulaRow("Mittensteigungswinkel γ (Grad)", "γ = arctan(Z₁ · mₓ / dm₁)"),
                 FormulaRow("Axialmodul", "mₓ = mₙ / cos(γ)"),
-                FormulaRow("Profilverschiebung", "xₘ = xf₂ · mₓ"),
                 FormulaRow("Normale Teilung", "pₙ = π · mₙ"),
                 FormulaRow("Axialteilung", "pₓ = π · mₓ"),
                 FormulaRow("Schneckenganghöhe", "p_z = pₓ · Z₁"),
@@ -54,7 +59,8 @@ fun InfoScreen() {
                 FormulaRow("Achsabstand", "a = (dm₁ + dm₂) / 2"),
                 FormulaRow("Zähnezahlverhältnis", "u = Z₂ / Z₁"),
                 FormulaRow("Formzahl", "q = Z₁ / tan(γ)"),
-                FormulaRow("Mittenkreisdurchmesser Schnecke", "dm₁ = (mₙ · Z₁) / sin(γ)")
+                FormulaRow("Normalzahndicke sₘₙ", "sₘₙ = (mₓ · π · cos(γ)) / 2")
+
             )
         )
 
@@ -72,13 +78,14 @@ fun InfoScreen() {
         InfoFormulaSection(
             title = "Schnecke",
             rows = listOf(
-                FormulaRow("Kopfhöhe Schnecke", "ha₁ = hamf₁ · mₓ"),
+                FormulaRow("Mittenkreisdurchmesser", "dm₁ = (mₙ · Z₁) / sin(γ)"),
+                FormulaRow("Kopfhöhe", "ha₁ = hamf₁ · mₓ"),
                 FormulaRow("Kopfkreisdurchmesser", "da₁ = dm₁ + 2·ha₁"),
                 FormulaRow("Kopfkreisradius", "ra₁ = da₁ / 2"),
-                FormulaRow("Fußhöhe Schnecke", "hf₁ = mₓ · (hFf₁f + cf₁f)"),
+                FormulaRow("Fußhöhe", "hf₁ = mₓ · (hFf₁f + cf₁f)"),
                 FormulaRow("Fußkreisdurchmesser", "df₁ = dm₁ − 2·hf₁"),
                 FormulaRow("Fußkreisradius", "rf₁ = df₁ / 2"),
-                FormulaRow("Zahnhöhe Schnecke", "h₁ = ha₁ + hf₁"),
+                FormulaRow("Zahnhöhe", "h₁ = ha₁ + hf₁"),
                 FormulaRow("Kopfspiel", "c₁ = a − 0,5·(da₁ + df₂)")
             )
         )
@@ -92,12 +99,13 @@ fun InfoScreen() {
                     "xf₂ = (2a − dₘ₁ − mₓ·Z₂) / (2·mₓ)"
                 ),
                 FormulaRow("Profilverschiebung", "xₘ = xf₂ · mₓ"),
+                FormulaRow("Profilverschiebung", "xₘ = xf₂ · mₓ"),
                 FormulaRow("Mittenkreisdurchmesser", "dm₂ = d₂ + 2·xₘ"),
-                FormulaRow("Kopfhöhe Rad", "ha₂ = hamf₂ · mₓ"),
+                FormulaRow("Kopfhöhe", "ha₂ = hamf₂ · mₓ"),
                 FormulaRow("Kopfkreisdurchmesser", "da₂ = dm₂ + 2·ha₂"),
-                FormulaRow("Fußhöhe Rad", "hf₂ = mₓ · (hFf₂f + cf₂f)"),
+                FormulaRow("Fußhöhe", "hf₂ = mₓ · (hFf₂f + cf₂f)"),
                 FormulaRow("Fußkreisdurchmesser", "df₂ = d₂ − 2·hf₂"),
-                FormulaRow("Zahnhöhe Rad", "h₂ = ha₂ + hf₂"),
+                FormulaRow("Zahnhöhe", "h₂ = ha₂ + hf₂"),
                 FormulaRow("Kopfspiel", "c₂ = a − 0,5 · (da₂ + df₁)")
             )
         )
@@ -113,11 +121,31 @@ fun InfoScreen() {
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Text(
-            text = "© 2025 Thomas Fritz vom SuperSchleiferFreundeClub",
-            style = MaterialTheme.typography.labelSmall,
-            color = Color(0xFF888888)
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(R.drawable.superschleifer)
+                    .decoderFactory(GifDecoder.Factory())
+                    .build(),
+                contentDescription = "SuperSchleifer",
+                modifier = Modifier
+                    .size(48.dp)
+                    .padding(end = 8.dp)
+            )
+
+            Text(
+                text = "© 2025 Thomas Fritz vom SuperSchleiferFreundeClub",
+                style = MaterialTheme.typography.labelSmall,
+                color = Color(0xFF888888)
+            )
+        }
+
     }
 }
 

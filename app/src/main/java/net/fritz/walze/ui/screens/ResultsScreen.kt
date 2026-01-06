@@ -51,6 +51,7 @@ fun ResultsScreen(
                 it.name.contains("Achsabstand") ||
                 it.name.contains("Eingriffswinkel") ||
                 it.name.contains("Formzahl q") ||
+                it.name.contains("Normalzahndicke") ||
                 it.name.contains("Zähnezahlverhältnis")
     }
 
