@@ -215,8 +215,8 @@ class WormGearCalculator : ViewModel() {
         return a - (da_2/2 + df_1/2)
     }
 
-    fun geta(d_m1: Double, dm_2: Double): Double {
-        return (d_m1 + dm_2)/2
+    fun geta(dm_1: Double, dm_2: Double): Double {
+        return (dm_1 + dm_2)/2
     }
 
     fun getu(z2: Double, z1: Double): Double {
@@ -304,14 +304,14 @@ class WormGearCalculator : ViewModel() {
         val resultc_1 = getc_1(a, resultda_1, resultdf_2)
         val resultc_2 = getc_2(a, resultda_2, resultdf_1)
         val resultu = getu(z2, z1)
-        val resulta = geta(d_m1, resultdm_2)
+        val resulta = geta(resultdm_1, resultdm_2)
 
 
 
 
 
         return listOf(ResultItem("Axialmodul mₓ",String.format("%.${NUMBER_PRECISION}f", resultm_x), "mm"),
-            ResultItem("Mittensteigungswinkel in rad", String.format("%.${NUMBER_PRECISION}f", resultgamma_Rad), ""),
+            ResultItem("Mittensteigungswinkel in radiant", String.format("%.${NUMBER_PRECISION}f", resultgamma_Rad), ""),
             ResultItem("Mittensteigungswinkel in Grad", String.format("%.${NUMBER_PRECISION}f", resultgamma_Grad), "°"),
             ResultItem("Normalteilung pₙ", String.format("%.${NUMBER_PRECISION}f", resultp_n), "mm"),
             ResultItem("Axialteilung pₓ", String.format("%.${NUMBER_PRECISION}f", resultp_x), "mm"),

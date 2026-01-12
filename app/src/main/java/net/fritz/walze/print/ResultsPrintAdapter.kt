@@ -91,7 +91,7 @@ class ResultsPrintAdapter(
         paint.textSize = 9f
         paint.typeface = Typeface.DEFAULT
         paint.textAlign = Paint.Align.CENTER
-        canvas.drawText("Unterschrift / Fertigung", centerX, y + 12f, paint)
+        canvas.drawText("Unterschrift", centerX, y + 12f, paint)
 
         // Datum + Uhrzeit rechts
         paint.textAlign = Paint.Align.RIGHT
@@ -195,7 +195,7 @@ class ResultsPrintAdapter(
     private fun ResultItem.isAllgemein(): Boolean {
         return name.contains("Axial") ||
                 name.contains("Normal") ||
-                name.contains("Mittensteigungswinkel") ||
+                name.contains("Mittensteigungswinkel in Grad") ||
                 name.contains("Mittenkreisdurchmesser") ||
                 name.contains("Achsabstand") ||
                 name.contains("Eingriffswinkel") ||
